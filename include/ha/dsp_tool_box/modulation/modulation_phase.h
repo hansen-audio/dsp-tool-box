@@ -2,8 +2,8 @@
 
 #pragma once
 
+#include "ha/dsp_tool_box/core/types.h"
 #include <cassert>
-#include <cstdint>
 #include <math.h>
 
 namespace ha {
@@ -20,7 +20,6 @@ public:
     phase() = default;
 
     using value_type = float;
-    using i32        = int32_t;
 
     static constexpr value_type RECIPROCAL_60_SECONDS    = value_type(1.) / value_type(60.);
     static constexpr value_type RECIPROCAL_BEATS_IN_NOTE = value_type(1.) / value_type(4.);

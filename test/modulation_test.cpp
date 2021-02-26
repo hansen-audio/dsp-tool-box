@@ -10,7 +10,7 @@ TEST(ModulationPhaseTest, testFreeRunningOverflowInOneStep)
 {
     ha::dtb::modulation::phase tmp_phase;
     tmp_phase.set_sample_rate(44100.f);
-    tmp_phase.set_mode(ha::dtb::modulation::phase::eMode::kModeFree);
+    tmp_phase.set_mode(ha::dtb::modulation::phase::modes::MODE_FREE);
     tmp_phase.set_rate(1);
     tmp_phase.update(44100);
 
@@ -23,7 +23,7 @@ TEST(ModulationPhaseTest, testFreeRunningOverflowInManyStep)
 {
     ha::dtb::modulation::phase tmp_phase;
     tmp_phase.set_sample_rate(44100.f);
-    tmp_phase.set_mode(ha::dtb::modulation::phase::eMode::kModeFree);
+    tmp_phase.set_mode(ha::dtb::modulation::phase::modes::MODE_FREE);
     tmp_phase.set_rate(1);
 
     const auto offsetInSamplesRoundingErrors = 23;
@@ -40,7 +40,7 @@ TEST(ModulationPhaseTest, testTempoSyncedOverflowInOneStep)
 {
     ha::dtb::modulation::phase tmp_phase;
     tmp_phase.set_sample_rate(44100.f);
-    tmp_phase.set_mode(ha::dtb::modulation::phase::eMode::kModeTempoSync);
+    tmp_phase.set_mode(ha::dtb::modulation::phase::modes::MODE_TEMPO_SYNC);
     tmp_phase.set_tempo(120.f);
     tmp_phase.set_note_length(1.f);
 
@@ -53,7 +53,7 @@ TEST(ModulationPhaseTest, testTempoSyncedOverflowInManyStep)
 {
     ha::dtb::modulation::phase tmp_phase;
     tmp_phase.set_sample_rate(44100.f);
-    tmp_phase.set_mode(ha::dtb::modulation::phase::eMode::kModeTempoSync);
+    tmp_phase.set_mode(ha::dtb::modulation::phase::modes::MODE_TEMPO_SYNC);
     tmp_phase.set_tempo(120.f);
     tmp_phase.set_note_length(1.f);
 
@@ -71,7 +71,7 @@ TEST(ModulationPhaseTest, testProjectSyncedOverflowInOneStep)
 {
     ha::dtb::modulation::phase tmp_phase;
     tmp_phase.set_sample_rate(44100.f);
-    tmp_phase.set_mode(ha::dtb::modulation::phase::eMode::kModeProjectSync);
+    tmp_phase.set_mode(ha::dtb::modulation::phase::modes::MODE_PROJECT_SYNC);
     tmp_phase.set_tempo(120.f);
     tmp_phase.set_note_length(1.f);
 
@@ -86,7 +86,7 @@ TEST(ModulationPhaseTest, testProjectSyncedTwoOverflowInOneStep)
 {
     ha::dtb::modulation::phase tmp_phase;
     tmp_phase.set_sample_rate(44100.f);
-    tmp_phase.set_mode(ha::dtb::modulation::phase::eMode::kModeProjectSync);
+    tmp_phase.set_mode(ha::dtb::modulation::phase::modes::MODE_PROJECT_SYNC);
     tmp_phase.set_tempo(120.f);
     tmp_phase.set_note_length(1.f);
 

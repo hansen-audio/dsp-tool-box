@@ -24,6 +24,11 @@ target_include_directories(dsp-tool-box
         ${CMAKE_CURRENT_LIST_DIR}/source
 )
 
+target_link_libraries(dsp-tool-box
+    PRIVATE
+        aligned-allocator
+)
+
 enable_testing()
 
 add_executable(dsp-tool-box_test

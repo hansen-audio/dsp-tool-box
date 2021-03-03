@@ -15,7 +15,7 @@ namespace {
 //------------------------------------------------------------------------
 bool check_overflow(float_t& phase_value, float const phase_max)
 {
-    bool overflow = phase_value >= phase_max;
+    bool const overflow = phase_value >= phase_max;
     if (overflow)
         phase_value = fmodf(phase_value, phase_max);
 
@@ -23,31 +23,31 @@ bool check_overflow(float_t& phase_value, float const phase_max)
 }
 
 //------------------------------------------------------------------------
-float_t compute_free_running_factor(float_t rate, float_t sample_rate_recip)
+float_t compute_free_running_factor(float_t const rate, float_t const sample_rate_recip)
 {
     return rate * sample_rate_recip;
 }
 
 //------------------------------------------------------------------------
-float_t compute_tempo_synced_factor(float_t sixty_seconds_recip, float_t tempo)
+float_t compute_tempo_synced_factor(float_t const sixty_seconds_recip, float_t const tempo)
 {
     return sixty_seconds_recip * tempo;
 }
 
 //------------------------------------------------------------------------
-void update_free_running(float_t& phase, i32 num_samples, float_t free_running_factor)
+void update_free_running(float_t& phase, i32 const num_samples, float_t const free_running_factor)
 {
     phase += static_cast<float_t>(num_samples) * free_running_factor;
 }
 
 //------------------------------------------------------------------------
-void update_tempo_synced(float_t& phase, i32 num_samples, float_t tempo_synced_factor)
+void update_tempo_synced(float_t& phase, i32 const num_samples, float_t const tempo_synced_factor)
 {
     phase += static_cast<float_t>(num_samples) * tempo_synced_factor;
 }
 
 //------------------------------------------------------------------------
-void update_project_sync(float_t& phase, float_t project_time, float_t rate)
+void update_project_sync(float_t& phase, float_t const project_time, float_t const rate)
 {
     phase = project_time * rate;
 }
@@ -114,7 +114,7 @@ void phase::set_project_time(value_type value)
 //------------------------------------------------------------------------
 void phase::set_note_length(value_type value)
 {
-    auto rate = note_length_to_rate(value);
+    value_type const rate = note_length_to_rate(value);
     set_rate(rate);
 }
 
@@ -144,28 +144,10 @@ bool one_shot_phase::update_one_shot(value_type& phase, i32 num_samples)
 }
 
 //------------------------------------------------------------------------
-one_shot_phase::value_type one_shot_phase::get_one_shot_phase(value_type phase) const
-{
-    if (did_overflow)
-        return value_type(1.);
-
-    return phase;
-}
-
-//------------------------------------------------------------------------
-void one_shot_phase::reset_one_shot(value_type& phase, value_type value)
-{
-    did_overflow = value < value_type(1.) ? false : true;
-    phase        = value;
-}
-
-//------------------------------------------------------------------------
 bool one_shot_phase::is_one_shot_overflow(value_type phase) const
 {
     return phase > value_type(1.);
 }
-
-//------------------------------------------------------------------------
 
 //------------------------------------------------------------------------
 } // namespace modulation

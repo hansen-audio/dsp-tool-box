@@ -31,17 +31,11 @@ public:
     using mode = i32;
 
     bool update(value_type& phase, i32 num_samples);
-
     void set_mode(mode value);
-
     void set_tempo(value_type value);
-
     void set_rate(value_type value);
-
     void set_sample_rate(value_type value);
-
     void set_project_time(value_type value);
-
     void set_note_length(value_type value);
 
     static value_type note_length_to_rate(value_type length);
@@ -59,6 +53,8 @@ private:
 };
 
 //------------------------------------------------------------------------
+// one_shot_phase
+//------------------------------------------------------------------------
 class one_shot_phase : public phase
 {
 public:
@@ -66,11 +62,6 @@ public:
     one_shot_phase() = default;
 
     bool update_one_shot(value_type& phase, i32 num_samples);
-
-    value_type get_one_shot_phase(value_type phase) const;
-
-    void reset_one_shot(value_type& phase, value_type init = value_type(0.));
-
     bool is_one_shot_overflow(value_type phase) const;
 
     //--------------------------------------------------------------------

@@ -21,10 +21,6 @@ public:
 
     using value_type = float;
 
-    static constexpr value_type RECIPROCAL_60_SECONDS    = value_type(1.) / value_type(60.);
-    static constexpr value_type RECIPROCAL_BEATS_IN_NOTE = value_type(1.) / value_type(4.);
-    static constexpr value_type PHASE_MAX                = value_type(1.);
-
     enum modes
     {
         MODE_FREE = 0,
@@ -34,9 +30,7 @@ public:
 
     using mode = i32;
 
-    bool update(i32 num_samples);
-
-    value_type get_phase() const { return current_phase; }
+    bool update(value_type& phase, i32 num_samples);
 
     void set_mode(mode value);
 
@@ -48,28 +42,12 @@ public:
 
     void set_project_time(value_type value);
 
-    void reset(value_type init = value_type(0.));
-
     void set_note_length(value_type value);
 
     static value_type note_length_to_rate(value_type length);
 
     //--------------------------------------------------------------------
 private:
-    inline bool check_overflow(value_type& phase);
-
-    inline void update_free_running(i32 num_samples);
-
-    inline void update_tempo_synced(i32 num_samples);
-
-    inline void update_project_sync();
-
-    inline value_type compute_free_running_factor(value_type rate,
-                                                  value_type sample_rate_recip) const;
-    inline value_type compute_tempo_synced_factor(value_type rate,
-                                                  value_type sample_rate_recip) const;
-
-    value_type current_phase     = value_type(0.);
     value_type rate              = value_type(0.);
     value_type tempo             = value_type(120.);
     value_type sample_rate_recip = value_type(1.);
@@ -87,13 +65,13 @@ public:
     //--------------------------------------------------------------------
     one_shot_phase() = default;
 
-    bool update_one_shot(i32 num_samples);
+    bool update_one_shot(value_type& phase, i32 num_samples);
 
-    value_type get_one_shot_phase() const;
+    value_type get_one_shot_phase(value_type phase) const;
 
-    void reset_one_shot(value_type init = value_type(0.));
+    void reset_one_shot(value_type& phase, value_type init = value_type(0.));
 
-    bool is_one_shot_overflow() const;
+    bool is_one_shot_overflow(value_type phase) const;
 
     //--------------------------------------------------------------------
 private:

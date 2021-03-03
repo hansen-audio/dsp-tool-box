@@ -6,52 +6,77 @@ namespace ha {
 namespace dtb {
 namespace modulation {
 
-// -----------------------------------------------------------------------
-//  phase
 //------------------------------------------------------------------------
-bool phase::check_overflow(value_type& phase_value)
+static constexpr float_t RECIPROCAL_60_SECONDS    = float_t(1.) / float_t(60.);
+static constexpr float_t RECIPROCAL_BEATS_IN_NOTE = float_t(1.) / float_t(4.);
+static constexpr float_t PHASE_MAX                = float_t(1.);
+
+namespace {
+//------------------------------------------------------------------------
+bool check_overflow(float_t& phase_value, float const phase_max)
 {
-    bool overflow = phase_value >= PHASE_MAX;
+    bool overflow = phase_value >= phase_max;
     if (overflow)
-        phase_value = fmodf(phase_value, PHASE_MAX);
+        phase_value = fmodf(phase_value, phase_max);
 
     return overflow;
 }
 
 //------------------------------------------------------------------------
-bool phase::update(i32 num_samples)
+float_t compute_free_running_factor(float_t rate, float_t sample_rate_recip)
+{
+    return rate * sample_rate_recip;
+}
+
+//------------------------------------------------------------------------
+float_t compute_tempo_synced_factor(float_t sixty_seconds_recip, float_t tempo)
+{
+    return sixty_seconds_recip * tempo;
+}
+
+//------------------------------------------------------------------------
+void update_free_running(float_t& phase, i32 num_samples, float_t free_running_factor)
+{
+    phase += static_cast<float_t>(num_samples) * free_running_factor;
+}
+
+//------------------------------------------------------------------------
+void update_tempo_synced(float_t& phase, i32 num_samples, float_t tempo_synced_factor)
+{
+    phase += static_cast<float_t>(num_samples) * tempo_synced_factor;
+}
+
+//------------------------------------------------------------------------
+void update_project_sync(float_t& phase, float_t project_time, float_t rate)
+{
+    phase = project_time * rate;
+}
+
+//------------------------------------------------------------------------
+} // namespace
+
+//------------------------------------------------------------------------
+//  phase
+//------------------------------------------------------------------------
+bool phase::update(value_type& phase, i32 num_samples)
 {
     switch (current_mode)
     {
         case MODE_FREE:
-            update_free_running(num_samples);
+            update_free_running(phase, num_samples, free_running_factor);
             break;
         case MODE_TEMPO_SYNC:
-            update_tempo_synced(num_samples);
+            update_tempo_synced(phase, num_samples, tempo_synced_factor);
             break;
         case MODE_PROJECT_SYNC:
-            update_project_sync();
+            update_project_sync(phase, project_time, rate);
             break;
         default:
             assert(!"Invalid mode");
             break;
     }
 
-    return check_overflow(current_phase);
-}
-
-//------------------------------------------------------------------------
-phase::value_type phase::compute_free_running_factor(value_type rate,
-                                                     value_type sample_rate_recip) const
-{
-    return rate * sample_rate_recip;
-}
-
-//------------------------------------------------------------------------
-phase::value_type phase::compute_tempo_synced_factor(value_type sixty_seconds_recip,
-                                                     value_type tempo) const
-{
-    return sixty_seconds_recip * tempo;
+    return check_overflow(phase, PHASE_MAX);
 }
 
 //------------------------------------------------------------------------
@@ -81,33 +106,9 @@ void phase::set_tempo(value_type value)
 }
 
 //------------------------------------------------------------------------
-void phase::update_free_running(i32 num_samples)
-{
-    current_phase += static_cast<value_type>(num_samples) * free_running_factor;
-}
-
-//------------------------------------------------------------------------
-void phase::update_tempo_synced(i32 num_samples)
-{
-    current_phase += static_cast<value_type>(num_samples) * tempo_synced_factor;
-}
-
-//------------------------------------------------------------------------
-void phase::update_project_sync()
-{
-    current_phase = project_time * rate;
-}
-
-//------------------------------------------------------------------------
 void phase::set_project_time(value_type value)
 {
     project_time = value;
-}
-
-//------------------------------------------------------------------------
-void phase::reset(value_type value)
-{
-    current_phase = value;
 }
 
 //------------------------------------------------------------------------
@@ -133,35 +134,35 @@ void phase::set_mode(mode value)
 //------------------------------------------------------------------------
 //  one_shot_phase
 //------------------------------------------------------------------------
-bool one_shot_phase::update_one_shot(i32 num_samples)
+bool one_shot_phase::update_one_shot(value_type& phase, i32 num_samples)
 {
     if (did_overflow)
         return true;
 
-    did_overflow = phase::update(num_samples);
+    did_overflow = phase::update(phase, num_samples);
     return did_overflow;
 }
 
 //------------------------------------------------------------------------
-one_shot_phase::value_type one_shot_phase::get_one_shot_phase() const
+one_shot_phase::value_type one_shot_phase::get_one_shot_phase(value_type phase) const
 {
     if (did_overflow)
         return value_type(1.);
 
-    return phase::get_phase();
+    return phase;
 }
 
 //------------------------------------------------------------------------
-void one_shot_phase::reset_one_shot(value_type value)
+void one_shot_phase::reset_one_shot(value_type& phase, value_type value)
 {
     did_overflow = value < value_type(1.) ? false : true;
-    phase::reset(value);
+    phase        = value;
 }
 
 //------------------------------------------------------------------------
-bool one_shot_phase::is_one_shot_overflow() const
+bool one_shot_phase::is_one_shot_overflow(value_type phase) const
 {
-    return did_overflow;
+    return phase > value_type(1.);
 }
 
 //------------------------------------------------------------------------

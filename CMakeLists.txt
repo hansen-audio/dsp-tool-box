@@ -34,6 +34,7 @@ enable_testing()
 add_executable(dsp-tool-box_test
     test/modulation_test.cpp
     test/adsr_envelope_test.cpp
+    test/one_pole_test.cpp
 )
 
 target_link_libraries(dsp-tool-box_test

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "ha/dsp_tool_box/core/types.h"
+#include <math.h>
 
 namespace ha {
 namespace dtb {

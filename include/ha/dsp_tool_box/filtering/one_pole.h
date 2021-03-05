@@ -36,7 +36,7 @@ public:
         data.b = float_t(1.) - data.a;
     }
 
-    static float_t smooth(float_t in, context_data& data)
+    static float_t process(float_t in, context_data& data)
     {
         if (is_equal(in, data))
             return data.z;

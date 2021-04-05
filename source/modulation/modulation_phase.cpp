@@ -60,16 +60,16 @@ void update_project_sync(float_t& phase, float_t const project_time, float_t con
 //------------------------------------------------------------------------
 bool phase::update(value_type& phase, i32 num_samples)
 {
-    switch (current_mode)
+    switch (context.current_mode)
     {
         case MODE_FREE:
-            update_free_running(phase, num_samples, free_running_factor);
+            update_free_running(phase, num_samples, context.free_running_factor);
             break;
         case MODE_TEMPO_SYNC:
-            update_tempo_synced(phase, num_samples, tempo_synced_factor);
+            update_tempo_synced(phase, num_samples, context.tempo_synced_factor);
             break;
         case MODE_PROJECT_SYNC:
-            update_project_sync(phase, project_time, rate);
+            update_project_sync(phase, context.project_time, context.rate);
             break;
         default:
             assert(!"Invalid mode");
@@ -82,33 +82,35 @@ bool phase::update(value_type& phase, i32 num_samples)
 //------------------------------------------------------------------------
 void phase::set_sample_rate(value_type value)
 {
-    sample_rate_recip   = value_type(1.) / value;
-    free_running_factor = compute_free_running_factor(rate, sample_rate_recip);
-    tempo_synced_factor =
-        free_running_factor * compute_tempo_synced_factor(RECIPROCAL_60_SECONDS, tempo);
+    context.sample_rate_recip = value_type(1.) / value;
+    context.free_running_factor =
+        compute_free_running_factor(context.rate, context.sample_rate_recip);
+    context.tempo_synced_factor = context.free_running_factor *
+                                  compute_tempo_synced_factor(RECIPROCAL_60_SECONDS, context.tempo);
 }
 
 //------------------------------------------------------------------------
 void phase::set_rate(value_type value)
 {
-    rate                = value;
-    free_running_factor = compute_free_running_factor(rate, sample_rate_recip);
-    tempo_synced_factor =
-        free_running_factor * compute_tempo_synced_factor(RECIPROCAL_60_SECONDS, tempo);
+    context.rate = value;
+    context.free_running_factor =
+        compute_free_running_factor(context.rate, context.sample_rate_recip);
+    context.tempo_synced_factor = context.free_running_factor *
+                                  compute_tempo_synced_factor(RECIPROCAL_60_SECONDS, context.tempo);
 }
 
 //------------------------------------------------------------------------
 void phase::set_tempo(value_type value)
 {
-    tempo = value;
-    tempo_synced_factor =
-        free_running_factor * compute_tempo_synced_factor(RECIPROCAL_60_SECONDS, tempo);
+    context.tempo               = value;
+    context.tempo_synced_factor = context.free_running_factor *
+                                  compute_tempo_synced_factor(RECIPROCAL_60_SECONDS, context.tempo);
 }
 
 //------------------------------------------------------------------------
 void phase::set_project_time(value_type value)
 {
-    project_time = value;
+    context.project_time = value;
 }
 
 //------------------------------------------------------------------------
@@ -128,7 +130,7 @@ phase::value_type phase::note_length_to_rate(value_type length)
 //------------------------------------------------------------------------
 void phase::set_mode(mode value)
 {
-    current_mode = value;
+    context.current_mode = value;
 }
 
 //------------------------------------------------------------------------
@@ -136,11 +138,11 @@ void phase::set_mode(mode value)
 //------------------------------------------------------------------------
 bool one_shot_phase::update_one_shot(value_type& phase, i32 num_samples)
 {
-    if (did_overflow)
+    if (context.did_overflow)
         return true;
 
-    did_overflow = phase::update(phase, num_samples);
-    return did_overflow;
+    context.did_overflow = phase::update(phase, num_samples);
+    return context.did_overflow;
 }
 
 //------------------------------------------------------------------------

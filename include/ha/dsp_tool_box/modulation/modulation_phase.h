@@ -10,9 +10,9 @@ namespace ha {
 namespace dtb {
 namespace modulation {
 
-//------------------------------------------------------------------------
-// phase
-//------------------------------------------------------------------------
+/**
+ * phase
+ */
 class phase
 {
 public:
@@ -20,6 +20,18 @@ public:
     phase() = default;
 
     using value_type = float;
+
+    struct context_t
+    {
+        value_type rate              = value_type(0.);
+        value_type tempo             = value_type(120.);
+        value_type sample_rate_recip = value_type(1.);
+        value_type project_time      = value_type(0.);
+        i32 current_mode             = MODE_FREE;
+
+        value_type free_running_factor = value_type(0.);
+        value_type tempo_synced_factor = value_type(0.);
+    };
 
     enum modes
     {
@@ -42,34 +54,31 @@ public:
 
     //--------------------------------------------------------------------
 private:
-    value_type rate              = value_type(0.);
-    value_type tempo             = value_type(120.);
-    value_type sample_rate_recip = value_type(1.);
-    value_type project_time      = value_type(0.);
-    i32 current_mode             = MODE_FREE;
-
-    value_type free_running_factor = value_type(0.);
-    value_type tempo_synced_factor = value_type(0.);
+    context_t context;
 };
 
-//------------------------------------------------------------------------
-// one_shot_phase
-//------------------------------------------------------------------------
+/**
+ * one_shot_phase
+ */
 class one_shot_phase : public phase
 {
 public:
     //--------------------------------------------------------------------
     one_shot_phase() = default;
 
+    struct context_t : public phase::context_t
+    {
+        bool did_overflow = false;
+    };
+
     bool update_one_shot(value_type& phase, i32 num_samples);
     bool is_one_shot_overflow(value_type phase) const;
 
     //--------------------------------------------------------------------
 private:
-    bool did_overflow = false;
+    context_t context;
 };
-//------------------------------------------------------------------------
-// #include "modulation_phase.inl.h"
+
 //------------------------------------------------------------------------
 } // namespace modulation
 } // namespace dtb

@@ -58,7 +58,7 @@ void update_project_sync(float_t& phase, float_t const project_time, float_t con
 //------------------------------------------------------------------------
 //  phase
 //------------------------------------------------------------------------
-bool phase::update(value_type& phase, i32 num_samples)
+bool phase::update(context_t& context, value_type& phase, i32 num_samples)
 {
     switch (context.current_mode)
     {
@@ -80,7 +80,7 @@ bool phase::update(value_type& phase, i32 num_samples)
 }
 
 //------------------------------------------------------------------------
-void phase::set_sample_rate(value_type value)
+void phase::set_sample_rate(context_t& context, value_type value)
 {
     context.sample_rate_recip = value_type(1.) / value;
     context.free_running_factor =
@@ -90,7 +90,7 @@ void phase::set_sample_rate(value_type value)
 }
 
 //------------------------------------------------------------------------
-void phase::set_rate(value_type value)
+void phase::set_rate(context_t& context, value_type value)
 {
     context.rate = value;
     context.free_running_factor =
@@ -100,7 +100,7 @@ void phase::set_rate(value_type value)
 }
 
 //------------------------------------------------------------------------
-void phase::set_tempo(value_type value)
+void phase::set_tempo(context_t& context, value_type value)
 {
     context.tempo               = value;
     context.tempo_synced_factor = context.free_running_factor *
@@ -108,16 +108,16 @@ void phase::set_tempo(value_type value)
 }
 
 //------------------------------------------------------------------------
-void phase::set_project_time(value_type value)
+void phase::set_project_time(context_t& context, value_type value)
 {
     context.project_time = value;
 }
 
 //------------------------------------------------------------------------
-void phase::set_note_length(value_type value)
+void phase::set_note_length(context_t& context, value_type value)
 {
     value_type const rate = note_length_to_rate(value);
-    set_rate(rate);
+    set_rate(context, rate);
 }
 
 //------------------------------------------------------------------------
@@ -128,7 +128,7 @@ phase::value_type phase::note_length_to_rate(value_type length)
 }
 
 //------------------------------------------------------------------------
-void phase::set_mode(mode value)
+void phase::set_mode(context_t& context, mode value)
 {
     context.current_mode = value;
 }
@@ -136,19 +136,19 @@ void phase::set_mode(mode value)
 //------------------------------------------------------------------------
 //  one_shot_phase
 //------------------------------------------------------------------------
-bool one_shot_phase::update_one_shot(value_type& phase, i32 num_samples)
+bool one_shot_phase::update_one_shot(context_t& context, phase::value_type& phase, i32 num_samples)
 {
     if (context.did_overflow)
         return true;
 
-    context.did_overflow = phase::update(phase, num_samples);
+    context.did_overflow = phase::update(context, phase, num_samples);
     return context.did_overflow;
 }
 
 //------------------------------------------------------------------------
-bool one_shot_phase::is_one_shot_overflow(value_type phase) const
+bool one_shot_phase::is_one_shot_overflow(context_t& context, phase::value_type phase)
 {
-    return phase > value_type(1.);
+    return phase > phase::value_type(1.);
 }
 
 //------------------------------------------------------------------------

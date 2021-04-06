@@ -10,16 +10,21 @@ namespace ha {
 namespace dtb {
 namespace modulation {
 
+//------------------------------------------------------------------------
 /**
  * phase
  */
-class phase
+struct phase
 {
-public:
-    //--------------------------------------------------------------------
-    phase() = default;
-
     using value_type = float;
+    enum modes
+    {
+        MODE_FREE = 0,
+        MODE_TEMPO_SYNC,
+        MODE_PROJECT_SYNC
+    };
+
+    using mode = i32;
 
     struct context_t
     {
@@ -33,50 +38,28 @@ public:
         value_type tempo_synced_factor = value_type(0.);
     };
 
-    enum modes
-    {
-        MODE_FREE = 0,
-        MODE_TEMPO_SYNC,
-        MODE_PROJECT_SYNC
-    };
-
-    using mode = i32;
-
-    bool update(value_type& phase, i32 num_samples);
-    void set_mode(mode value);
-    void set_tempo(value_type value);
-    void set_rate(value_type value);
-    void set_sample_rate(value_type value);
-    void set_project_time(value_type value);
-    void set_note_length(value_type value);
-
+    static bool update(context_t& context, value_type& phase, i32 num_samples);
+    static void set_mode(context_t& context, mode value);
+    static void set_tempo(context_t& context, value_type value);
+    static void set_rate(context_t& context, value_type value);
+    static void set_sample_rate(context_t& context, value_type value);
+    static void set_project_time(context_t& context, value_type value);
+    static void set_note_length(context_t& context, value_type value);
     static value_type note_length_to_rate(value_type length);
-
-    //--------------------------------------------------------------------
-private:
-    context_t context;
 };
 
 /**
  * one_shot_phase
  */
-class one_shot_phase : public phase
+struct one_shot_phase
 {
-public:
-    //--------------------------------------------------------------------
-    one_shot_phase() = default;
-
     struct context_t : public phase::context_t
     {
         bool did_overflow = false;
     };
 
-    bool update_one_shot(value_type& phase, i32 num_samples);
-    bool is_one_shot_overflow(value_type phase) const;
-
-    //--------------------------------------------------------------------
-private:
-    context_t context;
+    static bool update_one_shot(context_t& context, phase::value_type& phase, i32 num_samples);
+    static bool is_one_shot_overflow(context_t& context, phase::value_type phase);
 };
 
 //------------------------------------------------------------------------

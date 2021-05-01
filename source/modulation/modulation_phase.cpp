@@ -7,13 +7,13 @@ namespace dtb {
 namespace modulation {
 
 //------------------------------------------------------------------------
-static constexpr float_t RECIPROCAL_60_SECONDS    = float_t(1.) / float_t(60.);
-static constexpr float_t RECIPROCAL_BEATS_IN_NOTE = float_t(1.) / float_t(4.);
-static constexpr float_t PHASE_MAX                = float_t(1.);
+static constexpr real RECIPROCAL_60_SECONDS    = real(1.) / real(60.);
+static constexpr real RECIPROCAL_BEATS_IN_NOTE = real(1.) / real(4.);
+static constexpr real PHASE_MAX                = real(1.);
 
 namespace {
 //------------------------------------------------------------------------
-bool check_overflow(float_t& phase_value, float const phase_max)
+bool check_overflow(mut_real& phase_value, real const phase_max)
 {
     bool const overflow = phase_value >= phase_max;
     if (overflow)
@@ -23,31 +23,31 @@ bool check_overflow(float_t& phase_value, float const phase_max)
 }
 
 //------------------------------------------------------------------------
-float_t compute_free_running_factor(float_t const rate, float_t const sample_rate_recip)
+real compute_free_running_factor(real const rate, real const sample_rate_recip)
 {
     return rate * sample_rate_recip;
 }
 
 //------------------------------------------------------------------------
-float_t compute_tempo_synced_factor(float_t const sixty_seconds_recip, float_t const tempo)
+real compute_tempo_synced_factor(real const sixty_seconds_recip, real const tempo)
 {
     return sixty_seconds_recip * tempo;
 }
 
 //------------------------------------------------------------------------
-void update_free_running(float_t& phase, i32 const num_samples, float_t const free_running_factor)
+void update_free_running(mut_real& phase, i32 const num_samples, real const free_running_factor)
 {
-    phase += static_cast<float_t>(num_samples) * free_running_factor;
+    phase += static_cast<real>(num_samples) * free_running_factor;
 }
 
 //------------------------------------------------------------------------
-void update_tempo_synced(float_t& phase, i32 const num_samples, float_t const tempo_synced_factor)
+void update_tempo_synced(mut_real& phase, i32 const num_samples, real const tempo_synced_factor)
 {
-    phase += static_cast<float_t>(num_samples) * tempo_synced_factor;
+    phase += static_cast<real>(num_samples) * tempo_synced_factor;
 }
 
 //------------------------------------------------------------------------
-void update_project_sync(float_t& phase, float_t const project_time, float_t const rate)
+void update_project_sync(mut_real& phase, real const project_time, real const rate)
 {
     phase = project_time * rate;
 }

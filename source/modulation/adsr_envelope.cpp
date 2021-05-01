@@ -9,9 +9,9 @@ namespace modulation {
 //-----------------------------------------------------------------------------
 //	adsr_envelope
 //-----------------------------------------------------------------------------
-float_t adsr_envelope::get_value(context_data& data) const
+real adsr_envelope::get_value(context_data& data) const
 {
-    float_t value = MIN_VALUE;
+    mut_real value = MIN_VALUE;
     switch (data.stage)
     {
         case stages::STAGE_SUSTAIN:
@@ -36,17 +36,17 @@ float_t adsr_envelope::get_value(context_data& data) const
 }
 
 //-----------------------------------------------------------------------------
-void adsr_envelope::update_value(float_t new_value, value& value)
+void adsr_envelope::update_value(real new_value, value& value)
 {
     if (value.first == new_value)
         return;
 
     value.first  = new_value;
-    value.second = (new_value > float_t(0.)) ? (float_t(1.) / new_value) : float_t(0.);
+    value.second = (new_value > real(0.)) ? (real(1.) / new_value) : real(0.);
 }
 
 //-----------------------------------------------------------------------------
-float_t adsr_envelope::attack(context_data& data) const
+real adsr_envelope::attack(context_data& data) const
 {
     data.stage = stages::STAGE_ATTACK;
     if (data.time_seconds > att_seconds.first)
@@ -56,26 +56,26 @@ float_t adsr_envelope::attack(context_data& data) const
 }
 
 //-----------------------------------------------------------------------------
-float_t adsr_envelope::decay(context_data& data) const
+real adsr_envelope::decay(context_data& data) const
 {
     data.stage = stages::STAGE_DECAY;
     data.time_seconds -= att_seconds.first;
     if (data.time_seconds > dec_seconds.first)
         return sustain(data);
 
-    float_t value = data.time_seconds * dec_seconds.second;
+    real value = data.time_seconds * dec_seconds.second;
     return (sus_normalized - MAX_VALUE) * shape(value) + MAX_VALUE;
 }
 
 //-----------------------------------------------------------------------------
-inline float_t adsr_envelope::sustain(context_data& data) const
+inline real adsr_envelope::sustain(context_data& data) const
 {
     data.stage = stages::STAGE_SUSTAIN;
     return sus_normalized;
 }
 
 //-----------------------------------------------------------------------------
-float_t adsr_envelope::release(context_data& data) const
+real adsr_envelope::release(context_data& data) const
 {
     /*!
     The Fourth cycle is 'release' starting when key is released.
@@ -86,14 +86,14 @@ float_t adsr_envelope::release(context_data& data) const
     if (data.time_seconds > rel_seconds.first)
         return MIN_VALUE;
 
-    float_t value = data.time_seconds * rel_seconds.second;
+    real value = data.time_seconds * rel_seconds.second;
     return data.release_value - shape(value) * data.release_value;
 }
 
 //-----------------------------------------------------------------------------
-float_t adsr_envelope::shape(float_t x_val) const
+real adsr_envelope::shape(real x_val) const
 {
-    return easing::ease_virus_ti<float_t>(x_val);
+    return easing::ease_virus_ti<real>(x_val);
 }
 
 //-----------------------------------------------------------------------------
@@ -103,11 +103,11 @@ void adsr_envelope_processor::trigger()
 {
     current_data.stage         = adsr_envelope::stages::STAGE_ATTACK;
     current_data.release_value = adsr_envelope::MAX_VALUE;
-    current_data.time_seconds  = float_t(0.);
+    current_data.time_seconds  = real(0.);
 }
 
 //-----------------------------------------------------------------------------
-float_t adsr_envelope_processor::read(float_t time_seconds) const
+real adsr_envelope_processor::read(real time_seconds) const
 {
     current_data.time_seconds = time_seconds;
     current_value             = adsr.get_value(current_data);
@@ -119,7 +119,7 @@ void adsr_envelope_processor::release()
 {
     current_data.stage         = adsr_envelope::stages::STAGE_RELEASE;
     current_data.release_value = current_value;
-    current_data.time_seconds  = float_t(0.);
+    current_data.time_seconds  = real(0.);
 }
 
 //-----------------------------------------------------------------------------

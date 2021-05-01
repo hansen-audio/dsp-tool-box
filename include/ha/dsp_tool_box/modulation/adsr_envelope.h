@@ -37,10 +37,10 @@ public:
     adsr_envelope() = default;
 
     //! Value: normalized, normalizedRecip
-    using value = std::pair<float_t, float_t>;
+    using value = std::pair<mut_real, mut_real>;
 
-    static constexpr float_t MIN_VALUE = 0.;
-    static constexpr float_t MAX_VALUE = 1.;
+    static constexpr real MIN_VALUE = 0.;
+    static constexpr real MAX_VALUE = 1.;
 
     enum class stages
     {
@@ -54,29 +54,29 @@ public:
     struct context_data
     {
         stages stage;
-        float_t time_seconds;
-        float_t release_value;
+        mut_real time_seconds;
+        mut_real release_value;
     };
 
-    float_t get_value(context_data& data) const;
+    real get_value(context_data& data) const;
 
-    void set_att(float_t time_seconds) { update_value(time_seconds, att_seconds); }
-    void set_dec(float_t time_seconds) { update_value(time_seconds, dec_seconds); }
-    void set_sus(float_t normalized) { sus_normalized = normalized; }
-    void set_rel(float_t time_seconds) { update_value(time_seconds, rel_seconds); }
+    void set_att(real time_seconds) { update_value(time_seconds, att_seconds); }
+    void set_dec(real time_seconds) { update_value(time_seconds, dec_seconds); }
+    void set_sus(real normalized) { sus_normalized = normalized; }
+    void set_rel(real time_seconds) { update_value(time_seconds, rel_seconds); }
 
     //-------------------------------------------------------------------------
 private:
-    void update_value(float_t newValue, value& value);
-    float_t attack(context_data& data) const;
-    float_t decay(context_data& data) const;
-    float_t sustain(context_data& data) const;
-    float_t release(context_data& data) const;
-    float_t shape(float_t xVal) const;
+    void update_value(real newValue, value& value);
+    real attack(context_data& data) const;
+    real decay(context_data& data) const;
+    real sustain(context_data& data) const;
+    real release(context_data& data) const;
+    real shape(real xVal) const;
 
     value att_seconds;
     value dec_seconds;
-    float_t sus_normalized = float_t(0.);
+    mut_real sus_normalized = real(0.);
     value rel_seconds;
 };
 
@@ -88,19 +88,19 @@ public:
     adsr_envelope_processor() = default;
 
     void trigger();
-    float_t read(float_t time_seconds) const;
+    real read(real time_seconds) const;
     void release();
 
-    void set_att(float_t value) { adsr.set_att(value); };
-    void set_dec(float_t value) { adsr.set_dec(value); };
-    void set_sus(float_t value) { adsr.set_sus(value); };
-    void set_rel(float_t value) { adsr.set_rel(value); };
+    void set_att(real value) { adsr.set_att(value); };
+    void set_dec(real value) { adsr.set_dec(value); };
+    void set_sus(real value) { adsr.set_sus(value); };
+    void set_rel(real value) { adsr.set_rel(value); };
 
     //-------------------------------------------------------------------------
 private:
     adsr_envelope adsr;
     mutable adsr_envelope::context_data current_data;
-    mutable float_t current_value = float_t(0.);
+    mutable mut_real current_value = real(0.);
 };
 
 //-----------------------------------------------------------------------------

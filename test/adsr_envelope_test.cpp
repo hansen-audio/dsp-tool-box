@@ -4,17 +4,18 @@
 #include "gtest/gtest.h"
 #include <fstream>
 
+using namespace ha::dtb;
 using namespace ha::dtb::modulation;
 
-using TimeValue  = std::pair<float_t, float_t>;
+using TimeValue  = std::pair<real, real>;
 using TimeValues = std::vector<TimeValue>;
 
 using TestData = struct
 {
-    float_t att;
-    float_t dec;
-    float_t sus;
-    float_t rel;
+    real att;
+    real dec;
+    real sus;
+    real rel;
 
     const TimeValues kTriggered;
     const TimeValues kReleased;
@@ -72,13 +73,13 @@ static const TestData kReleaseInAttackData = {
     },
 };
 //-----------------------------------------------------------------------------
-void recordEnvelopeResponse(float_t att,
-                            float_t dec,
-                            float_t sus,
-                            float_t susHold,
-                            float_t rel,
-                            float_t timeUntilRelease,
-                            float_t timeDelta,
+void recordEnvelopeResponse(real att,
+                            real dec,
+                            real sus,
+                            real susHold,
+                            real rel,
+                            real timeUntilRelease,
+                            real timeDelta,
                             std::string dataName)
 {
     adsr_envelope_processor adsr;

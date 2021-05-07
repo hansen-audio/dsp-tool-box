@@ -142,6 +142,9 @@ bool one_shot_phase::update_one_shot(context& context, phase::value_type& phase,
         return true;
 
     context.did_overflow = phase::update(context, phase, num_samples);
+    if (context.did_overflow)
+        phase = phase::value_type(1.);
+
     return context.did_overflow;
 }
 

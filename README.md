@@ -2,7 +2,7 @@
 
 ## Motivation
 
-The dsp-tool-box contains very basic DSP algorithms like e.g. filters or a modulation phase.
+The ```dsp-tool-box``` contains very basic DSP algorithms like e.g. filters or a modulation phase.
 
 ## Building the project
 
@@ -24,9 +24,9 @@ CMake geneartors for all platforms.
 * macOS: ```cmake -GXcode ...```
 * Windows 10: ```cmake -G"Visual Studio 16 2019" -A x64 ...```
 
-## Using the algorithm modules
+## Using the algorithms
 
-All module classes in this library contain a ```context``` and ```static``` methods in order to modify the ```context```. Like this the data and the algorithm are separated and allow a usage in a multithreaded environment.
+All algorithm classes in this library contain a ```context``` and ```static``` methods in order to modify the ```context```. Like this the data and the algorithm are separated and allow a usage in a multithreaded environment.
 
 
 ### Setting parameters of the context

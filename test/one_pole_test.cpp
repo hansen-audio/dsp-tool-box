@@ -10,10 +10,10 @@ using namespace ha::dtb::filtering;
 //------------------------------------------------------------------------
 TEST(OnePoleTest, testOnePoleInitialisation)
 {
-    auto data = one_pole_filter::init();
-    EXPECT_FLOAT_EQ(data.a, 0.9);
-    EXPECT_FLOAT_EQ(data.b, 0.1);
-    EXPECT_FLOAT_EQ(data.z, 0.0);
+    auto opf_context = one_pole_filter::create();
+    EXPECT_FLOAT_EQ(opf_context.a, 0.9);
+    EXPECT_FLOAT_EQ(opf_context.b, 0.1);
+    EXPECT_FLOAT_EQ(opf_context.z, 0.0);
 }
 
 //------------------------------------------------------------------------

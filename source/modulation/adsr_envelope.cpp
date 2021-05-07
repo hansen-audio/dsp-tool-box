@@ -9,7 +9,7 @@ namespace modulation {
 //-----------------------------------------------------------------------------
 //	adsr_envelope
 //-----------------------------------------------------------------------------
-real adsr_envelope::get_value(context_data& data) const
+real adsr_envelope::get_value(context& data) const
 {
     mut_real value = MIN_VALUE;
     switch (data.stage)
@@ -46,7 +46,7 @@ void adsr_envelope::update_value(real new_value, value& value)
 }
 
 //-----------------------------------------------------------------------------
-real adsr_envelope::attack(context_data& data) const
+real adsr_envelope::attack(context& data) const
 {
     data.stage = stages::STAGE_ATTACK;
     if (data.time_seconds > att_seconds.first)
@@ -56,7 +56,7 @@ real adsr_envelope::attack(context_data& data) const
 }
 
 //-----------------------------------------------------------------------------
-real adsr_envelope::decay(context_data& data) const
+real adsr_envelope::decay(context& data) const
 {
     data.stage = stages::STAGE_DECAY;
     data.time_seconds -= att_seconds.first;
@@ -68,14 +68,14 @@ real adsr_envelope::decay(context_data& data) const
 }
 
 //-----------------------------------------------------------------------------
-inline real adsr_envelope::sustain(context_data& data) const
+inline real adsr_envelope::sustain(context& data) const
 {
     data.stage = stages::STAGE_SUSTAIN;
     return sus_normalized;
 }
 
 //-----------------------------------------------------------------------------
-real adsr_envelope::release(context_data& data) const
+real adsr_envelope::release(context& data) const
 {
     /*!
     The Fourth cycle is 'release' starting when key is released.

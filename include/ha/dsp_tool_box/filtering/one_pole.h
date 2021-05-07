@@ -9,43 +9,44 @@ namespace ha {
 namespace dtb {
 namespace filtering {
 
-//------------------------------------------------------------------------
-/** A one-pole filter for e.g. parameter smoothing. */
-//------------------------------------------------------------------------
+/**
+ * @brief A one-pole filter for e.g. parameter smoothing.
+ *
+ */
 class one_pole_filter final
 {
 public:
     //--------------------------------------------------------------------
-    struct context_data
+    struct context
     {
         mut_real a = 0;
         mut_real b = 0;
         mut_real z = 0;
     };
 
-    static context_data init(real a = 0.9)
+    static context create(real a = 0.9)
     {
-        context_data data{a, real(1.) - a, 0};
+        context ctx{a, real(1.) - a, 0};
 
-        return data;
+        return ctx;
     }
 
-    static void update_pole(real a, context_data& data)
+    static void update_pole(context& ctx, real a)
     {
-        data.a = a;
-        data.b = real(1.) - data.a;
+        ctx.a = a;
+        ctx.b = real(1.) - ctx.a;
     }
 
-    static real process(real in, context_data& data)
+    static real process(context& ctx, real in)
     {
-        if (is_equal(in, data))
-            return data.z;
+        if (is_equal(ctx, in))
+            return ctx.z;
 
-        data.z = (in * data.b) + (data.z * data.a);
-        return data.z;
+        ctx.z = (in * ctx.b) + (ctx.z * ctx.a);
+        return ctx.z;
     }
 
-    static void reset(real in, context_data& data) { data.z = in; }
+    static void reset(context& ctx, real in) { ctx.z = in; }
 
     static real tau_to_pole(real tau, real sample_rate)
     {
@@ -56,7 +57,7 @@ public:
     }
     //--------------------------------------------------------------------
 private:
-    static bool is_equal(real in, const context_data& data) { return in == data.z; }
+    static bool is_equal(const context& ctx, real in) { return in == ctx.z; }
 };
 
 //-----------------------------------------------------------------------------

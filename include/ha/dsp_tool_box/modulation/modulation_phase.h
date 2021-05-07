@@ -26,7 +26,7 @@ struct phase
 
     using mode = i32;
 
-    struct context_t
+    struct context
     {
         value_type rate              = value_type(0.);
         value_type tempo             = value_type(120.);
@@ -38,13 +38,13 @@ struct phase
         value_type tempo_synced_factor = value_type(0.);
     };
 
-    static bool update(context_t& context, value_type& phase, i32 num_samples);
-    static void set_mode(context_t& context, mode value);
-    static void set_tempo(context_t& context, value_type value);
-    static void set_rate(context_t& context, value_type value);
-    static void set_sample_rate(context_t& context, value_type value);
-    static void set_project_time(context_t& context, value_type value);
-    static void set_note_length(context_t& context, value_type value);
+    static bool update(context& context, value_type& phase, i32 num_samples);
+    static void set_mode(context& context, mode value);
+    static void set_tempo(context& context, value_type value);
+    static void set_rate(context& context, value_type value);
+    static void set_sample_rate(context& context, value_type value);
+    static void set_project_time(context& context, value_type value);
+    static void set_note_length(context& context, value_type value);
     static value_type note_length_to_rate(value_type length);
 };
 
@@ -53,13 +53,13 @@ struct phase
  */
 struct one_shot_phase
 {
-    struct context_t : public phase::context_t
+    struct context : public phase::context
     {
         bool did_overflow = false;
     };
 
-    static bool update_one_shot(context_t& context, phase::value_type& phase, i32 num_samples);
-    static bool is_one_shot_overflow(context_t& context, phase::value_type phase);
+    static bool update_one_shot(context& context, phase::value_type& phase, i32 num_samples);
+    static bool is_one_shot_overflow(context& context, phase::value_type phase);
 };
 
 //------------------------------------------------------------------------

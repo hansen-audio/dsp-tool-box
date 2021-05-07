@@ -51,14 +51,14 @@ public:
         STAGE_RELEASE
     };
 
-    struct context_data
+    struct context
     {
         stages stage;
         mut_real time_seconds;
         mut_real release_value;
     };
 
-    real get_value(context_data& data) const;
+    real get_value(context& data) const;
 
     void set_att(real time_seconds) { update_value(time_seconds, att_seconds); }
     void set_dec(real time_seconds) { update_value(time_seconds, dec_seconds); }
@@ -68,10 +68,10 @@ public:
     //-------------------------------------------------------------------------
 private:
     void update_value(real newValue, value& value);
-    real attack(context_data& data) const;
-    real decay(context_data& data) const;
-    real sustain(context_data& data) const;
-    real release(context_data& data) const;
+    real attack(context& data) const;
+    real decay(context& data) const;
+    real sustain(context& data) const;
+    real release(context& data) const;
     real shape(real xVal) const;
 
     value att_seconds;
@@ -99,7 +99,7 @@ public:
     //-------------------------------------------------------------------------
 private:
     adsr_envelope adsr;
-    mutable adsr_envelope::context_data current_data;
+    mutable adsr_envelope::context current_data;
     mutable mut_real current_value = real(0.);
 };
 

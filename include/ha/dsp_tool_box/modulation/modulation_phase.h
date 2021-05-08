@@ -16,7 +16,6 @@ namespace modulation {
  */
 struct phase
 {
-    using value_type = float;
     enum modes
     {
         MODE_FREE = 0,
@@ -28,24 +27,23 @@ struct phase
 
     struct context
     {
-        value_type rate              = value_type(0.);
-        value_type tempo             = value_type(120.);
-        value_type sample_rate_recip = value_type(1.);
-        value_type project_time      = value_type(0.);
+        mut_real rate                = real(0.);
+        mut_real tempo               = real(120.);
+        mut_real sample_rate_recip   = real(1.);
+        mut_real project_time        = real(0.);
         i32 current_mode             = MODE_FREE;
-
-        value_type free_running_factor = value_type(0.);
-        value_type tempo_synced_factor = value_type(0.);
+        mut_real free_running_factor = real(0.);
+        mut_real tempo_synced_factor = real(0.);
     };
 
-    static bool update(context& context, value_type& phase, i32 num_samples);
+    static bool update(context& context, mut_real& phase, i32 num_samples);
     static void set_mode(context& context, mode value);
-    static void set_tempo(context& context, value_type value);
-    static void set_rate(context& context, value_type value);
-    static void set_sample_rate(context& context, value_type value);
-    static void set_project_time(context& context, value_type value);
-    static void set_note_length(context& context, value_type value);
-    static value_type note_length_to_rate(value_type length);
+    static void set_tempo(context& context, real value);
+    static void set_rate(context& context, real value);
+    static void set_sample_rate(context& context, real value);
+    static void set_project_time(context& context, real value);
+    static void set_note_length(context& context, real value);
+    static real note_length_to_rate(real length);
 };
 
 /**
@@ -58,8 +56,8 @@ struct one_shot_phase
         bool did_overflow = false;
     };
 
-    static bool update_one_shot(context& context, phase::value_type& phase, i32 num_samples);
-    static bool is_one_shot_overflow(context& context, phase::value_type phase);
+    static bool update_one_shot(context& context, mut_real& phase, i32 num_samples);
+    static bool is_one_shot_overflow(context& context, real phase);
 };
 
 //------------------------------------------------------------------------

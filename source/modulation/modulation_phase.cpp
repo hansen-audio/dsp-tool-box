@@ -58,7 +58,7 @@ void update_project_sync(mut_real& phase, real const project_time, real const ra
 //------------------------------------------------------------------------
 //  phase
 //------------------------------------------------------------------------
-bool phase::update(context& context, value_type& phase, i32 num_samples)
+bool phase::update(context& context, mut_real& phase, i32 num_samples)
 {
     switch (context.current_mode)
     {
@@ -80,9 +80,9 @@ bool phase::update(context& context, value_type& phase, i32 num_samples)
 }
 
 //------------------------------------------------------------------------
-void phase::set_sample_rate(context& context, value_type value)
+void phase::set_sample_rate(context& context, real value)
 {
-    context.sample_rate_recip = value_type(1.) / value;
+    context.sample_rate_recip = real(1.) / value;
     context.free_running_factor =
         compute_free_running_factor(context.rate, context.sample_rate_recip);
     context.tempo_synced_factor = context.free_running_factor *
@@ -90,7 +90,7 @@ void phase::set_sample_rate(context& context, value_type value)
 }
 
 //------------------------------------------------------------------------
-void phase::set_rate(context& context, value_type value)
+void phase::set_rate(context& context, real value)
 {
     context.rate = value;
     context.free_running_factor =
@@ -100,7 +100,7 @@ void phase::set_rate(context& context, value_type value)
 }
 
 //------------------------------------------------------------------------
-void phase::set_tempo(context& context, value_type value)
+void phase::set_tempo(context& context, real value)
 {
     context.tempo               = value;
     context.tempo_synced_factor = context.free_running_factor *
@@ -108,23 +108,23 @@ void phase::set_tempo(context& context, value_type value)
 }
 
 //------------------------------------------------------------------------
-void phase::set_project_time(context& context, value_type value)
+void phase::set_project_time(context& context, real value)
 {
     context.project_time = value;
 }
 
 //------------------------------------------------------------------------
-void phase::set_note_length(context& context, value_type value)
+void phase::set_note_length(context& context, real value)
 {
-    value_type const rate = note_length_to_rate(value);
+    real const rate = note_length_to_rate(value);
     set_rate(context, rate);
 }
 
 //------------------------------------------------------------------------
-phase::value_type phase::note_length_to_rate(value_type length)
+real phase::note_length_to_rate(real length)
 {
-    assert(length > value_type(0.));
-    return (value_type(1.) / length) * RECIPROCAL_BEATS_IN_NOTE;
+    assert(length > real(0.));
+    return (real(1.) / length) * RECIPROCAL_BEATS_IN_NOTE;
 }
 
 //------------------------------------------------------------------------
@@ -136,22 +136,22 @@ void phase::set_mode(context& context, mode value)
 //------------------------------------------------------------------------
 //  one_shot_phase
 //------------------------------------------------------------------------
-bool one_shot_phase::update_one_shot(context& context, phase::value_type& phase, i32 num_samples)
+bool one_shot_phase::update_one_shot(context& context, mut_real& phase, i32 num_samples)
 {
     if (context.did_overflow)
         return true;
 
     context.did_overflow = phase::update(context, phase, num_samples);
     if (context.did_overflow)
-        phase = phase::value_type(1.);
+        phase = real(1.);
 
     return context.did_overflow;
 }
 
 //------------------------------------------------------------------------
-bool one_shot_phase::is_one_shot_overflow(context& context, phase::value_type phase)
+bool one_shot_phase::is_one_shot_overflow(context& context, real phase)
 {
-    return phase > phase::value_type(1.);
+    return phase > real(1.);
 }
 
 //------------------------------------------------------------------------

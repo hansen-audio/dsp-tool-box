@@ -3,13 +3,15 @@
 #include "ha/dsp_tool_box/modulation/modulation_phase.h"
 #include "gtest/gtest.h"
 
+using real = ha::dtb::real;
+
 //------------------------------------------------------------------------
 //	FrequencyModulatorTest
 //------------------------------------------------------------------------
 TEST(ModulationPhaseTest, testFreeRunningOverflowInOneStep)
 {
     using phase      = ha::dtb::modulation::phase;
-    auto phase_value = phase::value_type(0.);
+    auto phase_value = real(0.);
     phase::context ctx;
     phase::set_sample_rate(ctx, 44100.f);
     phase::set_mode(ctx, phase::modes::MODE_FREE);
@@ -23,7 +25,7 @@ TEST(ModulationPhaseTest, testFreeRunningOverflowInOneStep)
 TEST(ModulationPhaseTest, testFreeRunningOverflowInManyStep)
 {
     using phase      = ha::dtb::modulation::phase;
-    auto phase_value = phase::value_type(0.);
+    auto phase_value = real(0.);
     phase::context ctx;
     phase::set_sample_rate(ctx, 44100.f);
     phase::set_mode(ctx, phase::modes::MODE_FREE);
@@ -42,7 +44,7 @@ TEST(ModulationPhaseTest, testFreeRunningOverflowInManyStep)
 TEST(ModulationPhaseTest, testTempoSyncedOverflowInOneStep)
 {
     using phase      = ha::dtb::modulation::phase;
-    auto phase_value = phase::value_type(0.);
+    auto phase_value = real(0.);
     phase::context ctx;
     phase::set_sample_rate(ctx, 44100.f);
     phase::set_mode(ctx, phase::modes::MODE_TEMPO_SYNC);
@@ -57,7 +59,7 @@ TEST(ModulationPhaseTest, testTempoSyncedOverflowInOneStep)
 TEST(ModulationPhaseTest, testTempoSyncedOverflowInManyStep)
 {
     using phase      = ha::dtb::modulation::phase;
-    auto phase_value = phase::value_type(0.);
+    auto phase_value = real(0.);
     phase::context ctx;
     phase::set_sample_rate(ctx, 44100.f);
     phase::set_mode(ctx, phase::modes::MODE_TEMPO_SYNC);
@@ -77,7 +79,7 @@ TEST(ModulationPhaseTest, testTempoSyncedOverflowInManyStep)
 TEST(ModulationPhaseTest, testProjectSyncedOverflowInOneStep)
 {
     using phase      = ha::dtb::modulation::phase;
-    auto phase_value = phase::value_type(0.);
+    auto phase_value = real(0.);
     phase::context ctx;
     phase::set_sample_rate(ctx, 44100.f);
     phase::set_mode(ctx, phase::modes::MODE_PROJECT_SYNC);
@@ -94,7 +96,7 @@ TEST(ModulationPhaseTest, testProjectSyncedOverflowInOneStep)
 TEST(ModulationPhaseTest, testProjectSyncedTwoOverflowInOneStep)
 {
     using phase      = ha::dtb::modulation::phase;
-    auto phase_value = phase::value_type(0.);
+    auto phase_value = real(0.);
     phase::context ctx;
     phase::set_sample_rate(ctx, 44100.f);
     phase::set_mode(ctx, phase::modes::MODE_PROJECT_SYNC);

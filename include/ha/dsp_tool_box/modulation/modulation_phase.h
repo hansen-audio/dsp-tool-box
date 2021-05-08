@@ -16,14 +16,12 @@ namespace modulation {
  */
 struct phase
 {
-    enum modes
+    enum class sync_mode
     {
-        MODE_FREE = 0,
-        MODE_TEMPO_SYNC,
-        MODE_PROJECT_SYNC
+        FREE = 0,
+        TEMPO_SYNC,
+        PROJECT_SYNC
     };
-
-    using mode = mut_i32;
 
     struct context
     {
@@ -31,19 +29,20 @@ struct phase
         mut_real tempo               = real(120.);
         mut_real sample_rate_recip   = real(1.);
         mut_real project_time        = real(0.);
-        mode current_mode            = MODE_FREE;
+        sync_mode mode               = sync_mode::FREE;
         mut_real free_running_factor = real(0.);
         mut_real tempo_synced_factor = real(0.);
     };
 
-    static bool advance_one_shot(context& context, mut_real& value, i32 num_samples);
-    static bool advance(context const& context, mut_real& value, i32 num_samples);
-    static void set_mode(context& context, mode value);
-    static void set_tempo(context& context, real value);
-    static void set_rate(context& context, real value);
-    static void set_sample_rate(context& context, real value);
-    static void set_project_time(context& context, real value);
-    static void set_note_length(context& context, real value);
+    static bool
+    advance_one_shot(context const& cx, mut_real& value, i32 num_samples);
+    static bool advance(context const& cx, mut_real& value, i32 num_samples);
+    static void set_sync_mode(context& cx, sync_mode value);
+    static void set_tempo(context& cx, real value);
+    static void set_rate(context& cx, real value);
+    static void set_sample_rate(context& cx, real value);
+    static void set_project_time(context& cx, real value);
+    static void set_note_length(context& cx, real value);
     static real note_length_to_rate(real value);
 };
 

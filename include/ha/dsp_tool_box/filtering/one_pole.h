@@ -16,7 +16,7 @@ namespace filtering {
 class one_pole_filter final
 {
 public:
-    //--------------------------------------------------------------------
+    //-------------------------------------------------------------------------
     struct context
     {
         mut_real a = 0;
@@ -26,27 +26,27 @@ public:
 
     static context create(real a = 0.9)
     {
-        context ctx{a, real(1.) - a, 0};
+        context cx{a, real(1.) - a, 0};
 
-        return ctx;
+        return cx;
     }
 
-    static void update_pole(context& ctx, real a)
+    static void update_pole(context& cx, real a)
     {
-        ctx.a = a;
-        ctx.b = real(1.) - ctx.a;
+        cx.a = a;
+        cx.b = real(1.) - cx.a;
     }
 
-    static real process(context& ctx, real in)
+    static real process(context& cx, real in)
     {
-        if (is_equal(ctx, in))
-            return ctx.z;
+        if (is_equal(cx, in))
+            return cx.z;
 
-        ctx.z = (in * ctx.b) + (ctx.z * ctx.a);
-        return ctx.z;
+        cx.z = (in * cx.b) + (cx.z * cx.a);
+        return cx.z;
     }
 
-    static void reset(context& ctx, real in) { ctx.z = in; }
+    static void reset(context& cx, real in) { cx.z = in; }
 
     static real tau_to_pole(real tau, real sample_rate)
     {
@@ -55,9 +55,9 @@ public:
         constexpr real RECIPROCAL_5 = real(1. / 5.);
         return exp(real(-1) / ((tau * RECIPROCAL_5) * sample_rate));
     }
-    //--------------------------------------------------------------------
+    //-------------------------------------------------------------------------
 private:
-    static bool is_equal(const context& ctx, real in) { return in == ctx.z; }
+    static bool is_equal(const context& cx, real in) { return in == cx.z; }
 };
 
 //-----------------------------------------------------------------------------

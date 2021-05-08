@@ -16,8 +16,8 @@ TEST(ModulationPhaseTest, testFreeRunningOverflowInOneStep)
     phase::set_sample_rate(ctx, 44100.f);
     phase::set_mode(ctx, phase::modes::MODE_FREE);
     phase::set_rate(ctx, 1);
-    phase::update(ctx, phase_value, 44100);
-    EXPECT_TRUE(phase::update(ctx, phase_value, 44100));
+    phase::advance(ctx, phase_value, 44100);
+    EXPECT_TRUE(phase::advance(ctx, phase_value, 44100));
     EXPECT_EQ(phase_value, 0.f);
 }
 
@@ -35,7 +35,7 @@ TEST(ModulationPhaseTest, testFreeRunningOverflowInManyStep)
     auto counter                             = 44100 + offsetInSamplesRoundingErrors;
     bool overflow                            = false;
     while (counter-- > 0)
-        overflow = phase::update(ctx, phase_value, 1);
+        overflow = phase::advance(ctx, phase_value, 1);
 
     EXPECT_TRUE(overflow);
 }
@@ -51,7 +51,7 @@ TEST(ModulationPhaseTest, testTempoSyncedOverflowInOneStep)
     phase::set_tempo(ctx, 120.f);
     phase::set_note_length(ctx, 1.f);
 
-    EXPECT_TRUE(phase::update(ctx, phase_value, 44100 * 2)); // 1 Note takes 2 seconds at 120BPM
+    EXPECT_TRUE(phase::advance(ctx, phase_value, 44100 * 2)); // 1 Note takes 2 seconds at 120BPM
     EXPECT_EQ(phase_value, 0.f);
 }
 
@@ -70,7 +70,7 @@ TEST(ModulationPhaseTest, testTempoSyncedOverflowInManyStep)
     auto counter                             = (44100 + offsetInSamplesRoundingErrors) * 2;
     bool overflow                            = false;
     while (counter-- > 0)
-        overflow = phase::update(ctx, phase_value, 1);
+        overflow = phase::advance(ctx, phase_value, 1);
 
     EXPECT_TRUE(overflow);
 }
@@ -87,7 +87,7 @@ TEST(ModulationPhaseTest, testProjectSyncedOverflowInOneStep)
     phase::set_note_length(ctx, 1.f);
 
     phase::set_project_time(ctx, 4.f);
-    bool overflow = phase::update(ctx, phase_value, 1);
+    bool overflow = phase::advance(ctx, phase_value, 1);
     EXPECT_TRUE(overflow);
     EXPECT_EQ(phase_value, 0.f);
 }
@@ -104,7 +104,7 @@ TEST(ModulationPhaseTest, testProjectSyncedTwoOverflowInOneStep)
     phase::set_note_length(ctx, 1.f);
 
     phase::set_project_time(ctx, 8.f);
-    bool overflow = phase::update(ctx, phase_value, 1);
+    bool overflow = phase::advance(ctx, phase_value, 1);
     EXPECT_TRUE(overflow);
     EXPECT_EQ(phase_value, 0.f);
 }

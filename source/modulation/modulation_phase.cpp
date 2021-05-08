@@ -58,7 +58,7 @@ void update_project_sync(mut_real& phase, real const project_time, real const ra
 //------------------------------------------------------------------------
 //  phase
 //------------------------------------------------------------------------
-bool phase::update(context const& context, mut_real& phase, i32 num_samples)
+bool phase::advance(context const& context, mut_real& phase, i32 num_samples)
 {
     switch (context.current_mode)
     {
@@ -136,12 +136,12 @@ void phase::set_mode(context& context, mode value)
 //------------------------------------------------------------------------
 //  one_shot_phase
 //------------------------------------------------------------------------
-bool one_shot_phase::update_one_shot(context& context, mut_real& value, i32 num_samples)
+bool one_shot_phase::advance_one_shot(context& context, mut_real& value, i32 num_samples)
 {
     if (context.did_overflow)
         return true;
 
-    context.did_overflow = phase::update(context, value, num_samples);
+    context.did_overflow = phase::advance(context, value, num_samples);
     if (context.did_overflow)
         value = real(1.);
 

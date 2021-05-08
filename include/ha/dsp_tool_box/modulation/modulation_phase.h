@@ -36,7 +36,7 @@ struct phase
         mut_real tempo_synced_factor = real(0.);
     };
 
-    static bool update(context const& context, mut_real& value, i32 num_samples);
+    static bool advance(context const& context, mut_real& value, i32 num_samples);
     static void set_mode(context& context, mode value);
     static void set_tempo(context& context, real value);
     static void set_rate(context& context, real value);
@@ -56,7 +56,7 @@ struct one_shot_phase
         bool did_overflow = false;
     };
 
-    static bool update_one_shot(context& context, mut_real& value, i32 num_samples);
+    static bool advance_one_shot(context& context, mut_real& value, i32 num_samples);
     static bool is_one_shot_overflow(context const& context, real phase);
 };
 

@@ -35,13 +35,13 @@ real compute_tempo_synced_factor(real const sixty_seconds_recip, real const temp
 }
 
 //------------------------------------------------------------------------
-void update_free_running(mut_real& phase, i32 const num_samples, real const free_running_factor)
+void update_free_running(mut_real& phase, i32 num_samples, real const free_running_factor)
 {
     phase += static_cast<real>(num_samples) * free_running_factor;
 }
 
 //------------------------------------------------------------------------
-void update_tempo_synced(mut_real& phase, i32 const num_samples, real const tempo_synced_factor)
+void update_tempo_synced(mut_real& phase, i32 num_samples, real const tempo_synced_factor)
 {
     phase += static_cast<real>(num_samples) * tempo_synced_factor;
 }
@@ -77,6 +77,19 @@ bool phase::advance(context const& context, mut_real& phase, i32 num_samples)
     }
 
     return check_overflow(phase, PHASE_MAX);
+}
+
+//------------------------------------------------------------------------
+bool phase::advance_one_shot(context& context, mut_real& value, i32 num_samples)
+{
+    if (value >= real(1.))
+        return true;
+
+    bool const is_overflow = advance(context, value, num_samples);
+    if (is_overflow)
+        value = real(1.);
+
+    return is_overflow;
 }
 
 //------------------------------------------------------------------------
@@ -121,37 +134,16 @@ void phase::set_note_length(context& context, real value)
 }
 
 //------------------------------------------------------------------------
-real phase::note_length_to_rate(real length)
+real phase::note_length_to_rate(real value)
 {
-    assert(length > real(0.));
-    return (real(1.) / length) * RECIPROCAL_BEATS_IN_NOTE;
+    assert(value > real(0.));
+    return (real(1.) / value) * RECIPROCAL_BEATS_IN_NOTE;
 }
 
 //------------------------------------------------------------------------
 void phase::set_mode(context& context, mode value)
 {
     context.current_mode = value;
-}
-
-//------------------------------------------------------------------------
-//  one_shot_phase
-//------------------------------------------------------------------------
-bool one_shot_phase::advance_one_shot(context& context, mut_real& value, i32 num_samples)
-{
-    if (context.did_overflow)
-        return true;
-
-    context.did_overflow = phase::advance(context, value, num_samples);
-    if (context.did_overflow)
-        value = real(1.);
-
-    return context.did_overflow;
-}
-
-//------------------------------------------------------------------------
-bool one_shot_phase::is_one_shot_overflow(context const& context, real value)
-{
-    return value > real(1.);
 }
 
 //------------------------------------------------------------------------

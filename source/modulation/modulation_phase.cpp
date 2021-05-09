@@ -1,6 +1,8 @@
 // Copyright(c) 2021 Hansen Audio.
 
 #include "ha/dsp_tool_box/modulation/modulation_phase.h"
+#include <cassert>
+#include <math.h>
 
 namespace ha {
 namespace dtb {

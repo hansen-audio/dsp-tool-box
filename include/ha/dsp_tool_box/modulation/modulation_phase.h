@@ -38,7 +38,15 @@ struct phase
     };
 
     /**
-     * @brief Advances the phase value according to the given context
+     * @brief Create a context
+     *
+     * @return Returns a fully initialised and functional context
+     */
+    static context create();
+
+    /**
+     * @brief Advances the phase value in a shot like way. Once overflown the
+     * phase stays at 1.
      *
      * @param value Current phase value
      * @param num_samples Number of samples to advance
@@ -48,7 +56,7 @@ struct phase
     advance_one_shot(context const& cx, mut_real& value, i32 num_samples);
 
     /**
-     * @brief Advances the phase value according to the given context
+     * @brief Advances the phase value. WHen overflown it starts at 0 again.
      *
      * @param value Current phase value
      * @param num_samples Number of samples to advance

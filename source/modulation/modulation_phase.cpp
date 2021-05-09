@@ -161,6 +161,20 @@ void phase::set_sync_mode(context& cx, sync_mode value)
 }
 
 //-----------------------------------------------------------------------------
+phase::context phase::create()
+{
+    context cx;
+
+    cx.sample_rate_recip = real(1. / 44100.);
+    cx.mode              = sync_mode::TEMPO_SYNC;
+    cx.tempo             = real(120.);
+
+    phase::set_note_length(cx, real(1. / 32.));
+
+    return cx;
+}
+
+//-----------------------------------------------------------------------------
 } // namespace modulation
 } // namespace dtb
 } // namespace ha

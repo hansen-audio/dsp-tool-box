@@ -12,6 +12,7 @@ add_library(dsp-tool-box STATIC
     include/ha/dsp_tool_box/core/types.h
     include/ha/dsp_tool_box/filtering/one_pole.h
     include/ha/dsp_tool_box/modulation/modulation_phase.h
+    source/filtering/one_pole.cpp
     source/modulation/modulation_phase.cpp
 )
 

@@ -38,6 +38,16 @@ auto phase_context = ha::dtb::modulation::phase::create();
 ha::dtb::modulation::phase::set_tempo(phase_context, 120.);
 ```
 
+### Processing a module
+
+After setting all parameters of the ```context``` the  ```phase``` can ```advance``` a ```value``` by the specified amount of samples, in this case ```32```. The ```overflow``` boolean flags an overflow.
+
+```
+real value = 0;
+bool overflow = ha::dtb::modulation::phaseadvance(context const& cx, mut_real& value, 32);
+...
+```
+
 ## License
 
 Copyright 2021 Hansen Audio

@@ -5,9 +5,7 @@
 #include "ha/dsp_tool_box/core/types.h"
 #include <math.h>
 
-namespace ha {
-namespace dtb {
-namespace filtering {
+namespace ha::dtb::filtering {
 
 /**
  * @brief A one-pole filter for e.g. parameter smoothing.
@@ -30,6 +28,4 @@ struct one_pole_filter final
 };
 
 //-----------------------------------------------------------------------------
-} // namespace filtering
-} // namespace dtb
-} // namespace ha
+} // namespace ha::dtb::filtering

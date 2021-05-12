@@ -4,14 +4,12 @@
 
 #include "ha/dsp_tool_box/core/types.h"
 
-namespace ha {
-namespace dtb {
-namespace modulation {
+namespace ha::dtb::modulation {
 
 /**
  * @brief Phase running from 0 to 1 and can be used for e.g. an LFO
  */
-struct phase
+struct phase final
 {
     /**
      * @brief Sync mode of the phase
@@ -115,6 +113,4 @@ struct phase
 };
 
 //------------------------------------------------------------------------
-} // namespace modulation
-} // namespace dtb
-} // namespace ha
+} // namespace ha::dtb::modulation

@@ -4,9 +4,7 @@
 
 #include <math.h>
 
-namespace ha {
-namespace dtb {
-namespace filtering {
+namespace ha::dtb::filtering {
 namespace {
 
 //-----------------------------------------------------------------------------
@@ -59,6 +57,4 @@ real one_pole_filter::tau_to_pole(real tau, real sample_rate)
 }
 
 //-----------------------------------------------------------------------------
-} // namespace filtering
-} // namespace dtb
-} // namespace ha
+} // namespace ha::dtb::filtering

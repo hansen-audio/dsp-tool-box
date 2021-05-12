@@ -4,9 +4,7 @@
 #include <cassert>
 #include <math.h>
 
-namespace ha {
-namespace dtb {
-namespace modulation {
+namespace ha::dtb::modulation {
 
 //-----------------------------------------------------------------------------
 static constexpr real RECIPROCAL_60_SECONDS    = real(1.) / real(60.);
@@ -175,6 +173,4 @@ phase::context phase::create()
 }
 
 //-----------------------------------------------------------------------------
-} // namespace modulation
-} // namespace dtb
-} // namespace ha
+} // namespace ha::dtb::modulation

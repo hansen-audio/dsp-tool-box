@@ -5,10 +5,10 @@
 
 using namespace ha::dtb::filtering;
 
-//-----------------------------------------------------------------------------
-//	FrequencyModulatorTest
-//-----------------------------------------------------------------------------
-TEST(OnePoleTest, testOnePoleInitialisation)
+/**
+ * @brief one_pole_test
+ */
+TEST(one_pole_test, test_one_pole_initialisation)
 {
     auto opf_context = one_pole_filter::create();
     EXPECT_FLOAT_EQ(opf_context.a, 0.9);

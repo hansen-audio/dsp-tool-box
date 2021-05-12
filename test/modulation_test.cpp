@@ -5,10 +5,10 @@
 
 using real = ha::dtb::real;
 
-//------------------------------------------------------------------------
-//	FrequencyModulatorTest
-//------------------------------------------------------------------------
-TEST(ModulationPhaseTest, testFreeRunningOverflowInOneStep)
+/**
+ * @brief modulation_phase_test
+ */
+TEST(modulation_phase_test, test_free_running_overflow_in_one_step)
 {
     using phase      = ha::dtb::modulation::phase;
     auto phase_value = real(0.);
@@ -24,7 +24,7 @@ TEST(ModulationPhaseTest, testFreeRunningOverflowInOneStep)
 }
 
 //------------------------------------------------------------------------
-TEST(ModulationPhaseTest, testFreeRunningOverflowInManyStep)
+TEST(modulation_phase_test, test_free_running_overflow_in_many_step)
 {
     using phase      = ha::dtb::modulation::phase;
     auto phase_value = real(0.);
@@ -33,8 +33,8 @@ TEST(ModulationPhaseTest, testFreeRunningOverflowInManyStep)
     phase::set_sync_mode(cx, phase::sync_mode::FREE);
     phase::set_rate(cx, 1);
 
-    const auto offsetInSamplesRoundingErrors = 23;
-    auto counter  = 44100 + offsetInSamplesRoundingErrors;
+    const auto offset_in_samples_rounding_errors = 23;
+    auto counter  = 44100 + offset_in_samples_rounding_errors;
     bool overflow = false;
     while (counter-- > 0)
         overflow = phase::advance(cx, phase_value, 1);
@@ -43,7 +43,7 @@ TEST(ModulationPhaseTest, testFreeRunningOverflowInManyStep)
 }
 
 //------------------------------------------------------------------------
-TEST(ModulationPhaseTest, testTempoSyncedOverflowInOneStep)
+TEST(modulation_phase_test, test_tempo_synced_overflow_in_one_step)
 {
     using phase       = ha::dtb::modulation::phase;
     auto phase_value  = real(0.);
@@ -57,15 +57,15 @@ TEST(ModulationPhaseTest, testTempoSyncedOverflowInOneStep)
 }
 
 //------------------------------------------------------------------------
-TEST(ModulationPhaseTest, testTempoSyncedOverflowInManyStep)
+TEST(modulation_phase_test, test_tempo_synced_overflow_in_many_step)
 {
     using phase       = ha::dtb::modulation::phase;
     auto phase_value  = real(0.);
     phase::context cx = phase::create();
     phase::set_note_length(cx, 1.f);
 
-    const auto offsetInSamplesRoundingErrors = 37;
-    auto counter  = (44100 + offsetInSamplesRoundingErrors) * 2;
+    const auto offset_in_samples_rounding_errors = 37;
+    auto counter  = (44100 + offset_in_samples_rounding_errors) * 2;
     bool overflow = false;
     while (counter-- > 0)
         overflow = phase::advance(cx, phase_value, 1);
@@ -74,7 +74,7 @@ TEST(ModulationPhaseTest, testTempoSyncedOverflowInManyStep)
 }
 
 //------------------------------------------------------------------------
-TEST(ModulationPhaseTest, testProjectSyncedOverflowInOneStep)
+TEST(modulation_phase_test, test_project_synced_overflow_in_one_step)
 {
     using phase       = ha::dtb::modulation::phase;
     auto phase_value  = real(0.);
@@ -89,7 +89,7 @@ TEST(ModulationPhaseTest, testProjectSyncedOverflowInOneStep)
 }
 
 //------------------------------------------------------------------------
-TEST(ModulationPhaseTest, testProjectSyncedTwoOverflowInOneStep)
+TEST(modulation_phase_test, test_project_synced_two_overflow_in_one_step)
 {
     using phase       = ha::dtb::modulation::phase;
     auto phase_value  = real(0.);

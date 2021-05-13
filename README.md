@@ -4,6 +4,14 @@
 
 The ```dsp-tool-box``` contains very basic DSP algorithms. All algorithms can operate on one frame (4 channels) at a time. Like this an update of a parameter can be done any time while processing.
 
+### Dependency map
+
+```
+dsp-tool-box
++-- aligned-allocator
++-- googletest
+```
+
 ## Building the project
 
 Execute the following commands on cli.

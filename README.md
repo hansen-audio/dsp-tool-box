@@ -2,7 +2,7 @@
 
 ## Motivation
 
-The ```dsp-tool-box``` contains very basic DSP algorithms like e.g. filters or a modulation phase.
+The ```dsp-tool-box``` contains very basic DSP algorithms. All algorithms can operate on one frame (4 channels) at a time. Like this an update of a parameter can be done any time while processing.
 
 ## Building the project
 
@@ -24,10 +24,16 @@ CMake geneartors for all platforms.
 * macOS: ```cmake -GXcode ...```
 * Windows 10: ```cmake -G"Visual Studio 16 2019" -A x64 ...```
 
+## Algorithms
+
+Currently the following algorithms are available:
+
+* one pole filter
+* modulation phase
+
 ## Using the algorithms
 
 All algorithm classes in this library contain a ```context``` and ```static``` methods in order to modify the ```context```. Like this the data and the algorithm are separated and allow a usage in a multithreaded environment.
-
 
 ### Setting parameters of the context
 
@@ -44,7 +50,7 @@ After setting all parameters of the ```context``` the  ```phase``` can ```advanc
 
 ```
 real value = 0;
-bool overflow = ha::dtb::modulation::phaseadvance(context const& cx, mut_real& value, 32);
+bool overflow = ha::dtb::modulation::phase::advance(context const& cx, mut_real& value, 32);
 ...
 ```
 

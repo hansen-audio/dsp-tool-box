@@ -41,3 +41,7 @@ target_link_libraries(dsp-tool-box_test
         gtest
         gtest_main
 )
+
+add_test(NAME dsp-tool-box_test 
+    COMMAND dsp-tool-box_test
+)

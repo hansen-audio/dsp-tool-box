@@ -1,6 +1,6 @@
 # DSP Tool Box
 
-[![Cmake (Linux, macOS, Windows)](https://github.com/rehans/dsp-tool-box/actions/workflows/cmake.yml/badge.svg)](https://github.com/rehans/dsp-tool-box/actions/workflows/cmake.yml)
+[![CMake (Linux, macOS, Windows)](https://github.com/hansen-audio/dsp-tool-box/actions/workflows/cmake.yml/badge.svg)](https://github.com/hansen-audio/dsp-tool-box/actions/workflows/cmake.yml)
 
 
 ## Summary

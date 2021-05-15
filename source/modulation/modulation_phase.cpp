@@ -139,8 +139,9 @@ void phase::set_project_time(context& cx, real value)
 }
 
 //-----------------------------------------------------------------------------
-void phase::set_note_length(context& cx, real value)
+void phase::set_note_len(context& cx, real value)
 {
+    cx.note_len     = value;
     real const rate = note_length_to_rate(value);
     set_rate(cx, rate);
 }
@@ -161,13 +162,14 @@ void phase::set_sync_mode(context& cx, sync_mode value)
 //-----------------------------------------------------------------------------
 phase::context phase::create()
 {
+    constexpr real INIT_NOTE_LEN = real(1. / 32.);
     context cx;
 
     cx.sample_rate_recip = real(1. / 44100.);
     cx.mode              = sync_mode::TEMPO_SYNC;
     cx.tempo             = real(120.);
 
-    phase::set_note_length(cx, real(1. / 32.));
+    phase::set_note_len(cx, INIT_NOTE_LEN);
 
     return cx;
 }

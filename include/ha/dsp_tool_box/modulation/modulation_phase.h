@@ -33,6 +33,7 @@ struct phase final
         sync_mode mode               = sync_mode::FREE;
         mut_real free_running_factor = real(0.);
         mut_real tempo_synced_factor = real(0.);
+        mut_real note_len            = real(1. / 32.);
     };
 
     /**
@@ -102,7 +103,7 @@ struct phase final
      *
      * @param value Note len e.g. 1/32 -> 0.03125
      */
-    static void set_note_length(context& cx, real value);
+    static void set_note_len(context& cx, real value);
 
     /**
      * @brief Converts note len to rate (call set_rate(...) afterwards)

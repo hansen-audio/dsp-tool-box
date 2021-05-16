@@ -1,8 +1,6 @@
-cmake_minimum_required(VERSION 3.14.0)
+cmake_minimum_required(VERSION 3.15.0)
 
 include(FetchContent)
-
-set(CMAKE_CXX_STANDARD 17)
 
 project(ha-dsp-tool-box)
 
@@ -23,11 +21,6 @@ target_include_directories(dsp-tool-box
         ${CMAKE_CURRENT_LIST_DIR}/source
 )
 
-target_link_libraries(dsp-tool-box
-    PRIVATE
-        aligned-allocator
-)
-
 enable_testing()
 
 add_executable(dsp-tool-box_test
@@ -43,5 +36,6 @@ target_link_libraries(dsp-tool-box_test
 )
 
 add_test(NAME dsp-tool-box_test 
-    COMMAND dsp-tool-box_test
+    COMMAND 
+        dsp-tool-box_test
 )

@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 3.15.0)
 
-include(FetchContent)
-
 FetchContent_Declare(
     googletest
     GIT_REPOSITORY https://github.com/google/googletest.git

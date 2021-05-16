@@ -52,11 +52,24 @@ void update_tempo_synced(mut_real& phase,
 }
 
 //-----------------------------------------------------------------------------
+real floor_by_cast(real value)
+{
+    return static_cast<real>(static_cast<i32>(value));
+}
+
+//-----------------------------------------------------------------------------
+real normalise_phase(real value)
+{
+    return value - floor_by_cast(value);
+}
+
+//-----------------------------------------------------------------------------
 void update_project_sync(mut_real& phase,
                          real const project_time,
                          real const rate)
 {
     phase = project_time * rate;
+    phase = normalise_phase(phase);
 }
 
 //-----------------------------------------------------------------------------
@@ -75,9 +88,12 @@ bool phase::advance(context const& cx, mut_real& phase, i32 num_samples)
         case sync_mode::TEMPO_SYNC:
             update_tempo_synced(phase, num_samples, cx.tempo_synced_factor);
             break;
-        case sync_mode::PROJECT_SYNC:
+        case sync_mode::PROJECT_SYNC: {
+            real old_phase = phase;
             update_project_sync(phase, cx.project_time, cx.rate);
-            break;
+            bool did_overflow = phase < old_phase;
+            return did_overflow;
+        }
         default:
             assert(!"Invalid mode");
             break;

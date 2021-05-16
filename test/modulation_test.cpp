@@ -102,3 +102,23 @@ TEST(modulation_phase_test, test_project_synced_two_overflow_in_one_step)
     EXPECT_TRUE(overflow);
     EXPECT_EQ(phase_value, 0.f);
 }
+
+//------------------------------------------------------------------------
+TEST(modulation_phase_test, test_floor_by_cast)
+{
+    using i32 = ha::dtb::i32;
+
+    real val0               = 3.25;
+    real val0_floor_by_cast = static_cast<real>(static_cast<i32>(val0));
+    EXPECT_EQ(val0_floor_by_cast, 3.0);
+}
+
+//------------------------------------------------------------------------
+TEST(modulation_phase_test, test_floor_by_cast_2)
+{
+    using i32 = ha::dtb::i32;
+
+    real val0               = 3.75;
+    real val0_floor_by_cast = static_cast<real>(static_cast<i32>(val0));
+    EXPECT_EQ(val0_floor_by_cast, 3.0);
+}

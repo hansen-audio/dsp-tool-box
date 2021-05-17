@@ -74,33 +74,20 @@ TEST(modulation_phase_test, test_tempo_synced_overflow_in_many_step)
 }
 
 //------------------------------------------------------------------------
-TEST(modulation_phase_test, test_project_synced_overflow_in_one_step)
+TEST(modulation_phase_test, test_project_synced_overflow)
 {
     using phase       = ha::dtb::modulation::phase;
     auto phase_value  = real(0.);
     phase::context cx = phase::create();
     phase::set_sync_mode(cx, phase::sync_mode::PROJECT_SYNC);
     phase::set_note_len(cx, 1.f);
-    phase::set_project_time(cx, 4.f);
-
+    phase::set_project_time(cx, 3.9f);
     bool overflow = phase::advance(cx, phase_value, 1);
-    EXPECT_TRUE(overflow);
-    EXPECT_EQ(phase_value, 0.f);
-}
+    EXPECT_FALSE(overflow);
 
-//------------------------------------------------------------------------
-TEST(modulation_phase_test, test_project_synced_two_overflow_in_one_step)
-{
-    using phase       = ha::dtb::modulation::phase;
-    auto phase_value  = real(0.);
-    phase::context cx = phase::create();
-    phase::set_sync_mode(cx, phase::sync_mode::PROJECT_SYNC);
-    phase::set_note_len(cx, 1.f);
-    phase::set_project_time(cx, 8.f);
-
-    bool overflow = phase::advance(cx, phase_value, 1);
+    phase::set_project_time(cx, 4.0f);
+    overflow = phase::advance(cx, phase_value, 1);
     EXPECT_TRUE(overflow);
-    EXPECT_EQ(phase_value, 0.f);
 }
 
 //------------------------------------------------------------------------

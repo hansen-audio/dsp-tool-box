@@ -21,6 +21,11 @@ target_include_directories(dsp-tool-box
         ${CMAKE_CURRENT_LIST_DIR}/source
 )
 
+target_compile_features(dsp-tool-box
+    PUBLIC 
+        cxx_std_17
+)
+
 enable_testing()
 
 add_executable(dsp-tool-box_test

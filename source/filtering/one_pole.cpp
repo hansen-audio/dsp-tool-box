@@ -19,7 +19,7 @@ bool is_equal(const one_pole_filter::context& cx, real in)
 //-----------------------------------------------------------------------------
 one_pole_filter::context one_pole_filter::create(real a)
 {
-    context cx{a, real(1.) - a, 0};
+    context cx{a, real(1.) - a, real(0.)};
 
     return cx;
 }

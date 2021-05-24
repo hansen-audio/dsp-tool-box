@@ -9,8 +9,10 @@ add_subdirectory(external)
 add_library(dsp-tool-box STATIC
     include/ha/dsp_tool_box/core/types.h
     include/ha/dsp_tool_box/filtering/one_pole.h
+    include/ha/dsp_tool_box/modulation/adsr_envelope.h
     include/ha/dsp_tool_box/modulation/modulation_phase.h
     source/filtering/one_pole.cpp
+    source/modulation/adsr_envelope.cpp
     source/modulation/modulation_phase.cpp
 )
 
@@ -29,6 +31,7 @@ target_compile_features(dsp-tool-box
 enable_testing()
 
 add_executable(dsp-tool-box_test
+    test/adsr_envelope_test.cpp
     test/modulation_test.cpp
     test/one_pole_test.cpp
 )

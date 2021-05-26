@@ -17,7 +17,7 @@ bool check_overflow(mut_real& phase_value, real const phase_max)
 {
     bool const overflow = phase_value >= phase_max;
     if (overflow)
-        phase_value = fmod(phase_value, phase_max);
+        phase_value = real(fmod(phase_value, phase_max));
 
     return overflow;
 }

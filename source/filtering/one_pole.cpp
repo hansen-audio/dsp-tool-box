@@ -53,7 +53,7 @@ real one_pole_filter::tau_to_pole(real tau, real sample_rate)
     //! https://en.wikipedia.org/wiki/Time_constant
     //! (5 * Tau) means 99.3% reached thats sufficient.
     constexpr real RECIPROCAL_5 = real(1. / 5.);
-    return exp(real(-1) / ((tau * RECIPROCAL_5) * sample_rate));
+    return real(exp(real(-1) / ((tau * RECIPROCAL_5) * sample_rate)));
 }
 
 //-----------------------------------------------------------------------------

@@ -18,9 +18,9 @@ T ease_virus_ti(const T value)
         float db = 20.f * log10f (x);
         --> ca. -96dB....sufficient!
     */
-    constexpr T DB_VALUE      = T(96.);
-    constexpr T FACTOR        = pow(T(10.), DB_VALUE / T(20.));
-    constexpr T MULTIPLICATOR = log(FACTOR) / log(T(2.));
+    constexpr T DB_VALUE         = T(96.);
+    static const T FACTOR        = pow(T(10.), DB_VALUE / T(20.));
+    static const T MULTIPLICATOR = log(FACTOR) / log(T(2.));
     return T(1.) - pow(T(0.5), value * MULTIPLICATOR);
 }
 

@@ -5,39 +5,39 @@
 
 using real = ha::dtb::real;
 
+using namespace ha::dtb::modulation;
+
 /**
  * @brief modulation_phase_test
  */
 TEST(modulation_phase_test, test_free_running_overflow_in_one_step)
 {
-    using phase      = ha::dtb::modulation::phase;
-    auto phase_value = real(0.);
-    phase::context cx;
-    phase::set_sample_rate(cx, 44100.f);
-    phase::set_sync_mode(cx, phase::sync_mode::FREE);
-    phase::set_rate(cx, 1);
-    phase::advance(cx, phase_value, 44100);
+    auto val = real(0.);
+    Phase phase;
+    PhaseImpl::set_sample_rate(phase, 44100.f);
+    PhaseImpl::set_sync_mode(phase, Phase::SyncMode::Free);
+    PhaseImpl::set_rate(phase, 1);
+    PhaseImpl::advance(phase, val, 44100);
 
-    bool const overflow = phase::advance(cx, phase_value, 44100);
+    bool const overflow = PhaseImpl::advance(phase, val, 44100);
     EXPECT_TRUE(overflow);
-    EXPECT_EQ(phase_value, 0.f);
+    EXPECT_EQ(val, 0.f);
 }
 
 //------------------------------------------------------------------------
 TEST(modulation_phase_test, test_free_running_overflow_in_many_step)
 {
-    using phase      = ha::dtb::modulation::phase;
-    auto phase_value = real(0.);
-    phase::context cx;
-    phase::set_sample_rate(cx, 44100.f);
-    phase::set_sync_mode(cx, phase::sync_mode::FREE);
-    phase::set_rate(cx, 1);
+    auto val = real(0.);
+    Phase phase;
+    PhaseImpl::set_sample_rate(phase, 44100.f);
+    PhaseImpl::set_sync_mode(phase, Phase::SyncMode::Free);
+    PhaseImpl::set_rate(phase, 1);
 
     const auto offset_in_samples_rounding_errors = 23;
     auto counter  = 44100 + offset_in_samples_rounding_errors;
     bool overflow = false;
     while (counter-- > 0)
-        overflow = phase::advance(cx, phase_value, 1);
+        overflow = PhaseImpl::advance(phase, val, 1);
 
     EXPECT_TRUE(overflow);
 }
@@ -45,30 +45,28 @@ TEST(modulation_phase_test, test_free_running_overflow_in_many_step)
 //------------------------------------------------------------------------
 TEST(modulation_phase_test, test_tempo_synced_overflow_in_one_step)
 {
-    using phase       = ha::dtb::modulation::phase;
-    auto phase_value  = real(0.);
-    phase::context cx = phase::create();
-    phase::set_note_len(cx, 1.f);
+    auto val   = real(0.);
+    auto phase = PhaseImpl::create();
+    PhaseImpl::set_note_len(phase, 1.f);
 
     // 1 Note takes 2 seconds at 120BPM
-    bool const overflow = phase::advance(cx, phase_value, 44100 * 2);
+    bool const overflow = PhaseImpl::advance(phase, val, 44100 * 2);
     EXPECT_TRUE(overflow);
-    EXPECT_EQ(phase_value, 0.f);
+    EXPECT_EQ(val, 0.f);
 }
 
 //------------------------------------------------------------------------
 TEST(modulation_phase_test, test_tempo_synced_overflow_in_many_step)
 {
-    using phase       = ha::dtb::modulation::phase;
-    auto phase_value  = real(0.);
-    phase::context cx = phase::create();
-    phase::set_note_len(cx, 1.f);
+    auto val   = real(0.);
+    auto phase = PhaseImpl::create();
+    PhaseImpl::set_note_len(phase, 1.f);
 
     const auto offset_in_samples_rounding_errors = 37;
     auto counter  = (44100 + offset_in_samples_rounding_errors) * 2;
     bool overflow = false;
     while (counter-- > 0)
-        overflow = phase::advance(cx, phase_value, 1);
+        overflow = PhaseImpl::advance(phase, val, 1);
 
     EXPECT_TRUE(overflow);
 }
@@ -76,17 +74,16 @@ TEST(modulation_phase_test, test_tempo_synced_overflow_in_many_step)
 //------------------------------------------------------------------------
 TEST(modulation_phase_test, test_project_synced_overflow)
 {
-    using phase       = ha::dtb::modulation::phase;
-    auto phase_value  = real(0.);
-    phase::context cx = phase::create();
-    phase::set_sync_mode(cx, phase::sync_mode::PROJECT_SYNC);
-    phase::set_note_len(cx, 1.f);
-    phase::set_project_time(cx, 3.9f);
-    bool overflow = phase::advance(cx, phase_value, 1);
+    auto val   = real(0.);
+    auto phase = PhaseImpl::create();
+    PhaseImpl::set_sync_mode(phase, Phase::SyncMode::ProjectSync);
+    PhaseImpl::set_note_len(phase, 1.f);
+    PhaseImpl::set_project_time(phase, 3.9f);
+    bool overflow = PhaseImpl::advance(phase, val, 1);
     EXPECT_FALSE(overflow);
 
-    phase::set_project_time(cx, 4.0f);
-    overflow = phase::advance(cx, phase_value, 1);
+    PhaseImpl::set_project_time(phase, 4.0f);
+    overflow = PhaseImpl::advance(phase, val, 1);
     EXPECT_TRUE(overflow);
 }
 

@@ -11,19 +11,19 @@ namespace ha::dtb::filtering {
  * @brief A one-pole filter for e.g. parameter smoothing.
  *
  */
-struct one_pole_filter final
+struct OnePole final
 {
-    struct context
-    {
-        mut_real a = 0;
-        mut_real b = 0;
-        mut_real z = 0;
-    };
+    mut_real a = 0;
+    mut_real b = 0;
+    mut_real z = 0;
+};
 
-    static context create(real a = 0.9);
-    static void update_pole(context& cx, real a);
-    static real process(context& cx, real in);
-    static void reset(context& cx, real in);
+struct OnePoleImpl final
+{
+    static OnePole create(real a = 0.9);
+    static void update_pole(OnePole& self, real a);
+    static real process(OnePole& self, real in);
+    static void reset(OnePole& self, real in);
     static real tau_to_pole(real tau, real sample_rate);
 };
 

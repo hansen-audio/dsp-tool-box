@@ -8,47 +8,46 @@ namespace ha::dtb::filtering {
 namespace {
 
 //-----------------------------------------------------------------------------
-bool is_equal(const one_pole_filter::context& cx, real in)
+bool is_equal(const OnePole& self, real in)
 {
-    return in == cx.z;
+    return in == self.z;
 }
 
 //-----------------------------------------------------------------------------
 } // namespace
 
 //-----------------------------------------------------------------------------
-one_pole_filter::context one_pole_filter::create(real a)
+OnePole OnePoleImpl::create(real a)
 {
-    context cx{a, real(1.) - a, real(0.)};
-
-    return cx;
+    OnePole op{a, real(1.) - a, real(0.)};
+    return op;
 }
 
 //-----------------------------------------------------------------------------
-void one_pole_filter::update_pole(context& cx, real a)
+void OnePoleImpl::update_pole(OnePole& self, real a)
 {
-    cx.a = a;
-    cx.b = real(1.) - cx.a;
+    self.a = a;
+    self.b = real(1.) - self.a;
 }
 
 //-----------------------------------------------------------------------------
-real one_pole_filter::process(context& cx, real in)
+real OnePoleImpl::process(OnePole& self, real in)
 {
-    if (is_equal(cx, in))
-        return cx.z;
+    if (is_equal(self, in))
+        return self.z;
 
-    cx.z = (in * cx.b) + (cx.z * cx.a);
-    return cx.z;
+    self.z = (in * self.b) + (self.z * self.a);
+    return self.z;
 }
 
 //-----------------------------------------------------------------------------
-void one_pole_filter::reset(context& cx, real in)
+void OnePoleImpl::reset(OnePole& self, real in)
 {
-    cx.z = in;
+    self.z = in;
 }
 
 //-----------------------------------------------------------------------------
-real one_pole_filter::tau_to_pole(real tau, real sample_rate)
+real OnePoleImpl::tau_to_pole(real tau, real sample_rate)
 {
     //! https://en.wikipedia.org/wiki/Time_constant
     //! (5 * Tau) means 99.3% reached thats sufficient.

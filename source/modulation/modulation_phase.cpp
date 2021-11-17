@@ -78,19 +78,19 @@ void update_project_sync(mut_real& phase,
 //-----------------------------------------------------------------------------
 //  phase
 //-----------------------------------------------------------------------------
-bool phase::advance(context const& cx, mut_real& phase, i32 num_samples)
+bool PhaseImpl::advance(Phase const& self, mut_real& phase, i32 num_samples)
 {
-    switch (cx.mode)
+    switch (self.mode)
     {
-        case sync_mode::FREE:
-            update_free_running(phase, num_samples, cx.free_running_factor);
+        case Phase::SyncMode::Free:
+            update_free_running(phase, num_samples, self.free_running_factor);
             break;
-        case sync_mode::TEMPO_SYNC:
-            update_tempo_synced(phase, num_samples, cx.tempo_synced_factor);
+        case Phase::SyncMode::TempoSync:
+            update_tempo_synced(phase, num_samples, self.tempo_synced_factor);
             break;
-        case sync_mode::PROJECT_SYNC: {
+        case Phase::SyncMode::ProjectSync: {
             real old_phase = phase;
-            update_project_sync(phase, cx.project_time, cx.rate);
+            update_project_sync(phase, self.project_time, self.rate);
             bool did_overflow = phase < old_phase;
             return did_overflow;
         }
@@ -103,14 +103,14 @@ bool phase::advance(context const& cx, mut_real& phase, i32 num_samples)
 }
 
 //-----------------------------------------------------------------------------
-bool phase::advance_one_shot(context const& cx,
-                             mut_real& value,
-                             i32 num_samples)
+bool PhaseImpl::advance_one_shot(Phase const& self,
+                                 mut_real& value,
+                                 i32 num_samples)
 {
     if (value >= real(1.))
         return true;
 
-    bool const is_overflow = advance(cx, value, num_samples);
+    bool const is_overflow = advance(self, value, num_samples);
     if (is_overflow)
         value = real(1.);
 
@@ -118,76 +118,76 @@ bool phase::advance_one_shot(context const& cx,
 }
 
 //-----------------------------------------------------------------------------
-void phase::set_sample_rate(context& cx, real value)
+void PhaseImpl::set_sample_rate(Phase& self, real value)
 {
-    cx.sample_rate_recip = real(1.) / value;
-    cx.free_running_factor =
-        compute_free_running_factor(cx.rate, cx.sample_rate_recip);
-    cx.tempo_synced_factor =
-        cx.free_running_factor *
-        compute_tempo_synced_factor(RECIPROCAL_60_SECONDS, cx.tempo);
+    self.sample_rate_recip = real(1.) / value;
+    self.free_running_factor =
+        compute_free_running_factor(self.rate, self.sample_rate_recip);
+    self.tempo_synced_factor =
+        self.free_running_factor *
+        compute_tempo_synced_factor(RECIPROCAL_60_SECONDS, self.tempo);
 }
 
 //-----------------------------------------------------------------------------
-void phase::set_rate(context& cx, real value)
+void PhaseImpl::set_rate(Phase& self, real value)
 {
-    cx.rate = value;
-    cx.free_running_factor =
-        compute_free_running_factor(cx.rate, cx.sample_rate_recip);
-    cx.tempo_synced_factor =
-        cx.free_running_factor *
-        compute_tempo_synced_factor(RECIPROCAL_60_SECONDS, cx.tempo);
+    self.rate = value;
+    self.free_running_factor =
+        compute_free_running_factor(self.rate, self.sample_rate_recip);
+    self.tempo_synced_factor =
+        self.free_running_factor *
+        compute_tempo_synced_factor(RECIPROCAL_60_SECONDS, self.tempo);
 }
 
 //-----------------------------------------------------------------------------
-void phase::set_tempo(context& cx, real value)
+void PhaseImpl::set_tempo(Phase& self, real value)
 {
-    cx.tempo = value;
-    cx.tempo_synced_factor =
-        cx.free_running_factor *
-        compute_tempo_synced_factor(RECIPROCAL_60_SECONDS, cx.tempo);
+    self.tempo = value;
+    self.tempo_synced_factor =
+        self.free_running_factor *
+        compute_tempo_synced_factor(RECIPROCAL_60_SECONDS, self.tempo);
 }
 
 //-----------------------------------------------------------------------------
-void phase::set_project_time(context& cx, real value)
+void PhaseImpl::set_project_time(Phase& self, real value)
 {
-    cx.project_time = value;
+    self.project_time = value;
 }
 
 //-----------------------------------------------------------------------------
-void phase::set_note_len(context& cx, real value)
+void PhaseImpl::set_note_len(Phase& self, real value)
 {
-    cx.note_len     = value;
+    self.note_len   = value;
     real const rate = note_length_to_rate(value);
-    set_rate(cx, rate);
+    set_rate(self, rate);
 }
 
 //-----------------------------------------------------------------------------
-real phase::note_length_to_rate(real value)
+real PhaseImpl::note_length_to_rate(real value)
 {
     assert(value > real(0.));
     return (real(1.) / value) * RECIPROCAL_BEATS_IN_NOTE;
 }
 
 //-----------------------------------------------------------------------------
-void phase::set_sync_mode(context& cx, sync_mode value)
+void PhaseImpl::set_sync_mode(Phase& self, Phase::SyncMode value)
 {
-    cx.mode = value;
+    self.mode = value;
 }
 
 //-----------------------------------------------------------------------------
-phase::context phase::create()
+Phase PhaseImpl::create()
 {
     constexpr real INIT_NOTE_LEN = real(1. / 32.);
-    context cx;
+    Phase self;
 
-    cx.sample_rate_recip = real(1. / 44100.);
-    cx.mode              = sync_mode::TEMPO_SYNC;
-    cx.tempo             = real(120.);
+    self.sample_rate_recip = real(1. / 44100.);
+    self.mode              = Phase::SyncMode::TempoSync;
+    self.tempo             = real(120.);
 
-    phase::set_note_len(cx, INIT_NOTE_LEN);
+    PhaseImpl::set_note_len(self, INIT_NOTE_LEN);
 
-    return cx;
+    return self;
 }
 
 //-----------------------------------------------------------------------------
